@@ -191,6 +191,12 @@ button:disabled { cursor: default; }
 
 .options { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
 .opt { display: inline-flex; align-items: center; gap: 8px; }
+.yr-range { flex-basis: 100%; flex-wrap: wrap; gap: 6px 8px; }
+.yr-range .yr {
+  width: 74px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
+  font-family: var(--font-num); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.yr-range .link { margin-left: 4px; }
 .opt select { padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; }
 .opt input[type="range"] { width: 112px; accent-color: var(--ink); }
 .opt input[type="checkbox"] { accent-color: var(--ink); width: 16px; height: 16px; margin: 0; }
@@ -353,6 +359,14 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
     </div>
 
     <div class="options">
+      <div class="opt yr-range" role="group" aria-label="年代の範囲">
+        <span>年代の範囲</span>
+        <input type="number" id="yrMin" class="yr" step="1" inputmode="numeric" aria-label="開始年">
+        <span aria-hidden="true">〜</span>
+        <input type="number" id="yrMax" class="yr" step="1" inputmode="numeric" aria-label="終了年">
+        <button type="button" class="link" id="yrFit">データに合わせる</button>
+        <button type="button" class="link" id="yrReset">元に戻す</button>
+      </div>
       <label class="opt">並べ替え
         <select id="sortSel">
           <option value="year">発売年</option>
@@ -476,10 +490,12 @@ const CONFIG = {
   axes: {
     speed:   { min: -5,   max: 5,    tick: 1 },   // X：遅い(-) ↔ 速い(+)
     rebound: { min: -5,   max: 5,    tick: 1 },   // Y：低反発・安定(-) ↔ 高反発(+)
-    year:    { min: 1970, max: 2030, tick: 10 },  // Z：昔 ↔ 今
+    year:    { min: 1970, max: 2030, tick: 10 },  // Z：昔 ↔ 今（初期表示の範囲。画面の「年代の範囲」や URL の ?from=2010&to=2026 で変えられる）
   },
   draftKey: 'shoe-atlas-3d:draft:v1',   // 編集モードの下書き（このブラウザだけ）
 };
+const YEAR_DEFAULT = { min: CONFIG.axes.year.min, max: CONFIG.axes.year.max };
+const YEAR_LIMIT = { min: 1900, max: 2100 };   // 発売年・表示範囲として入力できる年
 const PALETTE = ['#ef6c1a', '#3d4450', '#1e63c8', '#0f9d8a', '#c92a62', '#5b3fc4', '#d23a2f', '#5b8a1c', '#b7791f', '#0e7490', '#9333ea', '#64748b'];
 
 
@@ -525,7 +541,8 @@ const UNKNOWN_BRAND = { id: '', name: '未分類', color: '#8a929b' };
 const brandOf = (s) => data.brands.get(s.brandId) || UNKNOWN_BRAND;
 const activeBrands = new Set();
 const seenBrands = new Set();
-const isShown = (s) => !data.brands.has(s.brandId) || activeBrands.has(s.brandId);
+const inYearRange = (s) => s.year >= CONFIG.axes.year.min && s.year <= CONFIG.axes.year.max;
+const isShown = (s) => inYearRange(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
 
 // mode: loading（接続中）/ shared（共有データ）/ local（この端末だけ）/ unavailable（共有データに入れない）
 const store = { mode: 'loading', loaded: false, canWrite: false, canUpload: false, db: null, assets: null };
@@ -625,7 +642,7 @@ let wallGeos = [];
 function wallLineGeometry(axis) {
   const xs = tickValues('speed').map((v) => axisToWorld('speed', v));
   const ys = tickValues('rebound').map((v) => axisToWorld('rebound', v));
-  const zs = tickValues('year').map((v) => -axisToWorld('year', v));
+  const zs = [...new Set([H, -H, ...tickValues('year').map((v) => -axisToWorld('year', v))].map((z) => +z.toFixed(6)))];
   const pos = [], col = [];
   const strong = (w) => Math.abs(w) < 1e-6 || Math.abs(Math.abs(w) - H) < 1e-6;
   const push = (a, b, s) => { pos.push(...a, ...b); const c = s ? colors.strong : colors.grid; col.push(c.r, c.g, c.b, c.r, c.g, c.b); };
@@ -701,26 +718,39 @@ function markerMat(color) {
   if (!markerMats.has(color)) markerMats.set(color, new THREE.MeshBasicMaterial({ color: new THREE.Color(color) }));
   return markerMats.get(color);
 }
+let dropLines = null;
+let helperItems = [];
 function rebuildHelpers() {
   emptyGroup(helperRoot);
-  if (dropGeo) { dropGeo.dispose(); dropGeo = null; }
-  const pts = [];
+  if (dropGeo) { dropGeo.dispose(); dropGeo = null; dropLines = null; }
+  helperItems = [];
   for (const e of entries.values()) {
     if (!isShown(e.shoe)) continue;
-    const p = e.pos;
-    pts.push(p.x, p.y, p.z, p.x, -H, p.z);
     const m = new THREE.Mesh(markerGeo, markerMat(brandOf(e.shoe).color));
-    m.position.set(p.x, -H + 0.015, p.z);
     helperRoot.add(m);
+    helperItems.push({ e, m });
   }
-  if (pts.length) {
+  if (helperItems.length) {
     dropGeo = new THREE.BufferGeometry();
-    dropGeo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-    const lines = new THREE.LineSegments(dropGeo, dropMat);
-    lines.computeLineDistances();
-    helperRoot.add(lines);
+    dropGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(helperItems.length * 6), 3));
+    dropLines = new THREE.LineSegments(dropGeo, dropMat);
+    helperRoot.add(dropLines);
   }
+  updateHelperPositions();
   updateHelperVisibility();
+}
+function updateHelperPositions() {
+  if (!dropGeo) return;
+  const arr = dropGeo.attributes.position.array;
+  helperItems.forEach(({ e, m }, i) => {
+    const p = e.sprite.position;
+    arr[i * 6] = p.x; arr[i * 6 + 1] = p.y; arr[i * 6 + 2] = p.z;
+    arr[i * 6 + 3] = p.x; arr[i * 6 + 4] = -H; arr[i * 6 + 5] = p.z;
+    m.position.set(p.x, -H + 0.015, p.z);
+  });
+  dropGeo.attributes.position.needsUpdate = true;
+  dropGeo.computeBoundingSphere();
+  dropLines.computeLineDistances();
 }
 function updateHelperVisibility() {
   helperRoot.visible = ui.helpers && view.mode === '3d';
@@ -1071,11 +1101,12 @@ function buildLabels() {
   add([-H - 1.1, 0, 0], 'x', { key: '速さ', text: '遅い' });
   add([0, H + 0.85, 0], 'y', { key: '反発', text: '高反発' });
   add([0, -H - 0.85, 0], 'y', { key: '反発', text: '低反発・安定' });
-  add([0, 0, -H - 1.1], 'z', { key: '年代', text: '今' });
-  add([0, 0, H + 1.1], 'z', { key: '年代', text: '昔' });
+  add([0, 0, -H - 1.1], 'z', { key: String(CONFIG.axes.year.max), text: '今' });
+  add([0, 0, H + 1.1], 'z', { key: String(CONFIG.axes.year.min), text: '昔' });
   for (const yr of tickValues('year')) {
     const z = -axisToWorld('year', yr);
-    if (Math.abs(z) > 1e-6) add([0, 0, z], 'z', { tick: true, text: String(yr) });
+    // 原点と両端（端は「昔／今」のラベルに年を出している）は省く
+    if (Math.abs(z) > 0.3 && Math.abs(z) < H - 0.3) add([0, 0, z], 'z', { tick: true, text: String(yr) });
   }
   for (const v of [-4, -2, 2, 4]) {
     add([axisToWorld('speed', v), 0, 0], 'x', { tick: true, planeOnly: true, text: signed(v).replace('.0', '') });
@@ -1377,7 +1408,7 @@ function renderCards() {
   if (store.loaded) countEl.innerHTML = `<b>${list.length}</b> / ${data.shoes.size} 足を表示中`;
   else countEl.textContent = '';
   if (store.loaded && data.shoes.size && !list.length) {
-    emptyEl.textContent = '表示中のブランドがありません。上のブランドを選ぶか「すべて表示」を押してください。';
+    emptyEl.textContent = '表示できるカードがありません。ブランドの絞り込みか、年代の範囲を変えてください。';
     emptyEl.hidden = false;
   } else if (store.loaded && !data.shoes.size) {
     emptyEl.textContent = store.canWrite ? 'まだカードがありません。「カードを追加」から登録できます。' : 'まだカードが登録されていません。';
@@ -1686,7 +1717,7 @@ let editing = null;          // 編集中のカード（新規なら null）
 let pendingImage = null;     // { blob, preview } 新しく選んだ画像
 let removeImage = false;
 let busy = false;
-f.year.min = CONFIG.axes.year.min; f.year.max = CONFIG.axes.year.max;
+f.year.min = YEAR_LIMIT.min; f.year.max = YEAR_LIMIT.max;
 
 const recentColors = new Set();   // 反映待ちのブランド色（連続で追加したときに同じ色にならないように）
 function unusedColor() {
@@ -1748,7 +1779,7 @@ function openCard(id) {
   f.name.value = editing ? editing.name : '';
   f.speed.value = editing ? editing.speed : 0;
   f.reb.value = editing ? editing.rebound : 0;
-  f.year.value = editing ? editing.year : Math.min(new Date().getFullYear(), CONFIG.axes.year.max);
+  f.year.value = editing ? editing.year : new Date().getFullYear();
   f.note.value = editing ? editing.note : '';
   f.err.textContent = '';
   f.imageField.hidden = store.mode === 'shared' && !store.canUpload;
@@ -1832,8 +1863,8 @@ f.save.addEventListener('click', async () => {
   const name = f.name.value.trim();
   const year = parseInt(f.year.value, 10);
   if (!name) { f.err.textContent = 'モデル名を入力してください。'; f.name.focus(); return; }
-  if (!Number.isFinite(year) || year < CONFIG.axes.year.min || year > CONFIG.axes.year.max) {
-    f.err.textContent = `発売年は ${CONFIG.axes.year.min}〜${CONFIG.axes.year.max} の範囲で入力してください。`; f.year.focus(); return;
+  if (!Number.isFinite(year) || year < YEAR_LIMIT.min || year > YEAR_LIMIT.max) {
+    f.err.textContent = `発売年は ${YEAR_LIMIT.min}〜${YEAR_LIMIT.max} の範囲で入力してください。`; f.year.focus(); return;
   }
   let brandId = f.brand.value, newBrand = null;
   if (brandId === '__new') {
@@ -1871,7 +1902,7 @@ f.save.addEventListener('click', async () => {
     cardDlg.close();
     activeBrands.add(brandId);
     select(shoe.id, { scrollList: true });
-    toast(editing ? `「${name}」を更新しました` : `「${name}」を追加しました`);
+    toast((editing ? `「${name}」を更新しました` : `「${name}」を追加しました`) + (inYearRange(shoe) ? '' : '（年代の範囲外のため、グラフには表示されていません）'));
   } catch (e) {
     if (uploaded && uploaded.imageAsset) api.dropAsset(uploaded.imageAsset);
     f.err.textContent = writeErrorMessage(e);
@@ -2052,11 +2083,91 @@ function resize() {
 new ResizeObserver(resize).observe(stageWrap);
 resize();
 
+/* ---------- 年代の範囲 ---------- */
+const yrMinEl = $('#yrMin'), yrMaxEl = $('#yrMax'), yrResetBtn = $('#yrReset'), yrFitBtn = $('#yrFit');
+[yrMinEl, yrMaxEl].forEach((el) => { el.min = YEAR_LIMIT.min; el.max = YEAR_LIMIT.max; });
+function yearStep(span) { return span <= 12 ? 1 : span <= 30 ? 5 : span <= 80 ? 10 : 20; }
+function setYearRange(min, max, opts = {}) {
+  const a = CONFIG.axes.year;
+  a.min = min; a.max = max; a.tick = yearStep(max - min);
+  buildWalls();
+  buildLabels();
+  for (const e of entries.values()) {
+    e.pos = worldPos(e.shoe);
+    if (!opts.animate || reduceMotion) e.sprite.position.copy(e.pos);   // 通常はカードが新しい位置まで滑らかに動く
+  }
+  yrMinEl.value = min; yrMaxEl.value = max;
+  yrResetBtn.disabled = min === YEAR_DEFAULT.min && max === YEAR_DEFAULT.max;
+  if (opts.updateUrl !== false) writeYearToUrl();
+  onFilterChange();
+}
+function moveSprites(dt) {
+  const k = 1 - Math.exp(-8 * dt);
+  let moving = false;
+  for (const e of entries.values()) {
+    const p = e.sprite.position;
+    if (p.distanceToSquared(e.pos) > 1e-6) {
+      p.lerp(e.pos, k);
+      if (p.distanceToSquared(e.pos) <= 1e-6) p.copy(e.pos);
+      moving = true;
+    }
+  }
+  if (moving) updateHelperPositions();
+  return moving;
+}
+function onYearInput() {
+  let min = parseInt(yrMinEl.value, 10), max = parseInt(yrMaxEl.value, 10);
+  const a = CONFIG.axes.year;
+  if (!Number.isFinite(min) || !Number.isFinite(max)) { yrMinEl.value = a.min; yrMaxEl.value = a.max; return; }
+  min = clamp(min, YEAR_LIMIT.min, YEAR_LIMIT.max);
+  max = clamp(max, YEAR_LIMIT.min, YEAR_LIMIT.max);
+  if (max - min < 2) {
+    toast('年代の範囲は2年以上あけてください');
+    yrMinEl.value = a.min; yrMaxEl.value = a.max;
+    return;
+  }
+  if (min !== a.min || max !== a.max) setYearRange(min, max, { animate: true });
+}
+[yrMinEl, yrMaxEl].forEach((el) => {
+  el.addEventListener('change', onYearInput);
+  el.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); onYearInput(); } });
+});
+yrResetBtn.addEventListener('click', () => setYearRange(YEAR_DEFAULT.min, YEAR_DEFAULT.max, { animate: true }));
+yrFitBtn.addEventListener('click', () => {
+  const years = [...data.shoes.values()].filter((s) => !data.brands.has(s.brandId) || activeBrands.has(s.brandId)).map((s) => s.year);
+  if (!years.length) { toast('範囲を合わせるカードがありません'); return; }
+  // 表示中ブランドのカードがちょうど収まるよう、前後に少し余白を取って5年単位に丸める
+  const min = Math.floor((Math.min(...years) - 1) / 5) * 5;
+  const max = Math.max(min + 5, Math.ceil((Math.max(...years) + 1) / 5) * 5);
+  setYearRange(min, max, { animate: true });
+});
+// URL の ?from=2010&to=2026 で範囲を指定できる（そのリンクを共有すれば同じ範囲で開ける）
+function writeYearToUrl() {
+  try {
+    const u = new URL(location.href);
+    const a = CONFIG.axes.year;
+    if (a.min === YEAR_DEFAULT.min && a.max === YEAR_DEFAULT.max) { u.searchParams.delete('from'); u.searchParams.delete('to'); }
+    else { u.searchParams.set('from', a.min); u.searchParams.set('to', a.max); }
+    history.replaceState(null, '', u.toString());
+  } catch (_) {}
+}
+(function readYearFromUrl() {
+  const q = new URLSearchParams(location.search);
+  const from = parseInt(q.get('from'), 10), to = parseInt(q.get('to'), 10);
+  if (Number.isFinite(from) && Number.isFinite(to) && to - from >= 2 && from >= YEAR_LIMIT.min && to <= YEAR_LIMIT.max) {
+    CONFIG.axes.year.min = from; CONFIG.axes.year.max = to;
+  }
+  CONFIG.axes.year.tick = yearStep(CONFIG.axes.year.max - CONFIG.axes.year.min);
+  yrMinEl.value = CONFIG.axes.year.min; yrMaxEl.value = CONFIG.axes.year.max;
+  yrResetBtn.disabled = CONFIG.axes.year.min === YEAR_DEFAULT.min && CONFIG.axes.year.max === YEAR_DEFAULT.max;
+})();
+
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
   last = now;
-  const moving = step(dt);
+  let moving = step(dt);
+  if (moveSprites(dt)) moving = true;
   if (hoverPending && !pointers.size) {
     hoverPending = false;
     const id = pick(hoverXY.x, hoverXY.y);
