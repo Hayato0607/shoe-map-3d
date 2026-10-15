@@ -1,6 +1,8 @@
 // ランニングシューズ 3Dマップのデータ
 // speed:   -5（遅い）〜 +5（速い）
 // rebound: -5（低反発・安定）〜 +5（高反発）
+// weight:  重さ（g）。未入力なら null
+// price:   価格（円）。未入力なら null
 // year:    発売年
 // image:   images フォルダの画像パス（例 "images/vaporfly.webp"）。なければ null で仮のイラストを表示
 // brandId: brands の id
@@ -65,6 +67,8 @@ window.SHOE_DATA = {
       "year": 2017,
       "speed": 4.8,
       "rebound": -0.5,
+      "weight": 155,
+      "price": 16500,
       "image": null,
       "note": ""
     },
@@ -75,6 +79,8 @@ window.SHOE_DATA = {
       "year": 2017,
       "speed": 4,
       "rebound": -1,
+      "weight": 160,
+      "price": 16000,
       "image": null,
       "note": ""
     },
@@ -85,6 +91,8 @@ window.SHOE_DATA = {
       "year": 2017,
       "speed": 1,
       "rebound": 1,
+      "weight": 184,
+      "price": 25920,
       "image": null,
       "note": ""
     },
@@ -95,6 +103,8 @@ window.SHOE_DATA = {
       "year": 2018,
       "speed": 3,
       "rebound": 0.5,
+      "weight": 200,
+      "price": 20000,
       "image": null,
       "note": ""
     },
@@ -105,6 +115,8 @@ window.SHOE_DATA = {
       "year": 2018,
       "speed": 1.3,
       "rebound": 1,
+      "weight": 195,
+      "price": 28080,
       "image": null,
       "note": ""
     },
@@ -115,6 +127,8 @@ window.SHOE_DATA = {
       "year": 2019,
       "speed": 4.2,
       "rebound": -0.7,
+      "weight": 180,
+      "price": 16000,
       "image": null,
       "note": ""
     },
@@ -125,6 +139,8 @@ window.SHOE_DATA = {
       "year": 2019,
       "speed": 2,
       "rebound": 2,
+      "weight": 190,
+      "price": 29700,
       "image": null,
       "note": ""
     },
@@ -135,6 +151,8 @@ window.SHOE_DATA = {
       "year": 2020,
       "speed": 1.5,
       "rebound": 2,
+      "weight": 230,
+      "price": 22000,
       "image": null,
       "note": ""
     },
@@ -145,6 +163,8 @@ window.SHOE_DATA = {
       "year": 2020,
       "speed": 4,
       "rebound": 4,
+      "weight": 206,
+      "price": 33000,
       "image": null,
       "note": ""
     },
@@ -155,6 +175,8 @@ window.SHOE_DATA = {
       "year": 2020,
       "speed": 3,
       "rebound": 1,
+      "weight": 190,
+      "price": 20000,
       "image": null,
       "note": ""
     },
@@ -165,6 +187,8 @@ window.SHOE_DATA = {
       "year": 2021,
       "speed": 2,
       "rebound": 1,
+      "weight": 225,
+      "price": 26000,
       "image": null,
       "note": ""
     },
@@ -175,6 +199,8 @@ window.SHOE_DATA = {
       "year": 2021,
       "speed": 0.5,
       "rebound": 0.8,
+      "weight": 210,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -185,6 +211,8 @@ window.SHOE_DATA = {
       "year": 2021,
       "speed": 1,
       "rebound": 1.2,
+      "weight": 199,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -195,6 +223,8 @@ window.SHOE_DATA = {
       "year": 2021,
       "speed": 3.7,
       "rebound": 0.3,
+      "weight": 190,
+      "price": 20000,
       "image": null,
       "note": ""
     },
@@ -205,6 +235,8 @@ window.SHOE_DATA = {
       "year": 2021,
       "speed": 2.3,
       "rebound": 2,
+      "weight": 188,
+      "price": 30250,
       "image": null,
       "note": ""
     },
@@ -215,6 +247,8 @@ window.SHOE_DATA = {
       "year": 2022,
       "speed": 2,
       "rebound": 2.5,
+      "weight": 223,
+      "price": 26400,
       "image": null,
       "note": ""
     },
@@ -225,6 +259,8 @@ window.SHOE_DATA = {
       "year": 2022,
       "speed": 3.5,
       "rebound": 4,
+      "weight": 233,
+      "price": 33000,
       "image": null,
       "note": ""
     },
@@ -235,6 +271,8 @@ window.SHOE_DATA = {
       "year": 2022,
       "speed": 1.2,
       "rebound": 1,
+      "weight": 210,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -245,6 +283,8 @@ window.SHOE_DATA = {
       "year": 2022,
       "speed": 1.7,
       "rebound": 2,
+      "weight": 196,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -255,6 +295,8 @@ window.SHOE_DATA = {
       "year": 2022,
       "speed": 4.3,
       "rebound": 0.5,
+      "weight": 166,
+      "price": 19800,
       "image": null,
       "note": ""
     },
@@ -265,6 +307,8 @@ window.SHOE_DATA = {
       "year": 2023,
       "speed": 5,
       "rebound": 4,
+      "weight": 138,
+      "price": 82500,
       "image": null,
       "note": ""
     },
@@ -275,6 +319,8 @@ window.SHOE_DATA = {
       "year": 2023,
       "speed": 4.2,
       "rebound": 1.2,
+      "weight": 190,
+      "price": 20900,
       "image": null,
       "note": ""
     },
@@ -285,16 +331,8 @@ window.SHOE_DATA = {
       "year": 2023,
       "speed": 1.2,
       "rebound": 1.2,
-      "image": null,
-      "note": ""
-    },
-    {
-      "id": "smv90buoa5jlj",
-      "brandId": "b-adidas",
-      "name": "Adios Pro 4",
-      "year": 2024,
-      "speed": 2.5,
-      "rebound": 3,
+      "weight": 186,
+      "price": 29700,
       "image": null,
       "note": ""
     },
@@ -305,6 +343,8 @@ window.SHOE_DATA = {
       "year": 2024,
       "speed": 4.5,
       "rebound": 4.5,
+      "weight": 198,
+      "price": 39655,
       "image": null,
       "note": ""
     },
@@ -315,6 +355,8 @@ window.SHOE_DATA = {
       "year": 2024,
       "speed": 2.5,
       "rebound": 1.7,
+      "weight": 185,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -325,6 +367,8 @@ window.SHOE_DATA = {
       "year": 2024,
       "speed": 2.3,
       "rebound": 2.8,
+      "weight": 176,
+      "price": 27500,
       "image": null,
       "note": ""
     },
@@ -335,6 +379,20 @@ window.SHOE_DATA = {
       "year": 2024,
       "speed": 4,
       "rebound": 1,
+      "weight": 200,
+      "price": 22000,
+      "image": null,
+      "note": ""
+    },
+    {
+      "id": "smv90buoa5jlj",
+      "brandId": "b-adidas",
+      "name": "Adios Pro 4",
+      "year": 2025,
+      "speed": 2.5,
+      "rebound": 3,
+      "weight": 200,
+      "price": 28600,
       "image": null,
       "note": ""
     },
@@ -345,6 +403,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 5,
       "rebound": 4.5,
+      "weight": 138,
+      "price": 82500,
       "image": null,
       "note": ""
     },
@@ -355,6 +415,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 3.7,
       "rebound": 3,
+      "weight": 170,
+      "price": 29700,
       "image": null,
       "note": ""
     },
@@ -365,6 +427,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 3.2,
       "rebound": 3.2,
+      "weight": 129,
+      "price": 33000,
       "image": null,
       "note": ""
     },
@@ -375,6 +439,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 3.5,
       "rebound": 3.5,
+      "weight": 170,
+      "price": 29700,
       "image": null,
       "note": ""
     },
@@ -385,6 +451,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 4.2,
       "rebound": 1.5,
+      "weight": 170,
+      "price": 24200,
       "image": null,
       "note": ""
     },
@@ -395,6 +463,8 @@ window.SHOE_DATA = {
       "year": 2025,
       "speed": 3,
       "rebound": 2,
+      "weight": 190,
+      "price": 29700,
       "image": null,
       "note": ""
     },
@@ -405,6 +475,8 @@ window.SHOE_DATA = {
       "year": 2026,
       "speed": 5,
       "rebound": 4.7,
+      "weight": 97,
+      "price": null,
       "image": null,
       "note": ""
     },
@@ -415,6 +487,8 @@ window.SHOE_DATA = {
       "year": 2026,
       "speed": 4.5,
       "rebound": 4.5,
+      "weight": 208,
+      "price": null,
       "image": null,
       "note": ""
     },
@@ -425,6 +499,8 @@ window.SHOE_DATA = {
       "year": 2026,
       "speed": 4.5,
       "rebound": 1,
+      "weight": 126,
+      "price": 26730,
       "image": null,
       "note": ""
     }
