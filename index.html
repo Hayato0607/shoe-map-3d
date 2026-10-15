@@ -118,6 +118,31 @@ button:disabled { cursor: default; }
 .seg-btn[aria-pressed="true"] small { color: inherit; opacity: 0.75; }
 .seg-btn.icon { font-size: 20px; font-weight: 500; min-width: 40px; text-align: center; display: block; padding: 6px 10px; }
 
+.scrubber {
+  position: absolute; left: 16px; bottom: 88px; z-index: 4;
+  width: min(640px, calc(100% - 32px));
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 6px 20px -12px var(--shadow);
+}
+.play { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--ink); color: var(--surface); display: grid; place-items: center; flex: none; }
+.play svg { width: 15px; height: 15px; fill: currentColor; }
+.scrub-main { flex: 1 1 auto; min-width: 0; display: grid; gap: 2px; }
+.scrub-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.scrub-label { font-family: var(--font-num); font-size: 20px; font-weight: 700; color: var(--axis-z); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scrub-count { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+#sliceRange { width: 100%; margin: 0; accent-color: var(--axis-z); }
+.seg-mini { display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--surface-2); flex: none; }
+.seg-mini button { border: 0; background: transparent; padding: 4px 9px; border-radius: 7px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.seg-mini button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(15, 20, 26, 0.16); }
+.scrub-close { width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; display: grid; place-items: center; flex: none; color: var(--ink-3); }
+.scrub-close:hover { background: var(--surface-2); color: var(--ink); }
+.scrub-close svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; fill: none; }
+.slice-year {
+  position: absolute; top: 14px; right: 22px; pointer-events: none;
+  font-family: var(--font-num); font-weight: 700; font-size: 60px; line-height: 1;
+  color: var(--axis-z); font-variant-numeric: tabular-nums; letter-spacing: 0.01em;
+}
 .tip {
   position: absolute; left: 0; top: 0; z-index: 6;
   min-width: 184px; max-width: 250px; padding: 10px 13px 12px;
@@ -291,6 +316,13 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
   .seg-btn { padding: 5px 10px 6px; }
   .seg-btn b { font-size: 16px; }
   .seg-btn small { font-size: 10px; }
+  .scrubber { left: 10px; right: 10px; width: auto; bottom: 74px; gap: 6px 8px; padding: 8px 10px; flex-wrap: wrap; }
+  .scrub-main { order: 3; flex-basis: 100%; }
+  .scrub-close { margin-left: auto; }
+  .scrub-label { font-size: 17px; }
+  .scrubber .play { width: 36px; height: 36px; }
+  .seg-mini button { padding: 4px 7px; }
+  .slice-year { display: none; }
   .lbl.axis { font-size: 12px; padding: 1px 8px 2px; }
   .lbl.tick { font-size: 12.5px; }
   .panel { overflow: visible; }
@@ -319,12 +351,34 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
         <button type="button" class="seg-btn" data-mode="side" aria-pressed="false"><b>x = 0</b><small>年代 × 反発</small></button>
         <button type="button" class="seg-btn" data-mode="top" aria-pressed="false"><b>y = 0</b><small>速さ × 年代</small></button>
       </div>
+      <div class="seg" role="group" aria-label="年代で切り取る">
+        <button type="button" class="seg-btn" id="sliceBtn" aria-pressed="false"><b>年代</b><small>で切り取る</small></button>
+      </div>
       <div class="seg zoom" role="group" aria-label="拡大と縮小">
         <button type="button" class="seg-btn icon" id="zoomOut" aria-label="縮小">−</button>
         <button type="button" class="seg-btn icon" id="zoomIn" aria-label="拡大">＋</button>
       </div>
     </div>
 
+    <div class="slice-year" id="sliceYear" hidden aria-hidden="true"></div>
+    <div class="scrubber" id="scrubber" hidden>
+      <button type="button" class="play" id="slicePlay" aria-label="年代を順番に再生">
+        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-play"><path d="M4 2.5v11l9-5.5z"/></svg>
+        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause" hidden><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
+      </button>
+      <div class="scrub-main">
+        <div class="scrub-top"><span class="scrub-label" id="sliceLabel"></span><span class="scrub-count" id="sliceCount"></span></div>
+        <input type="range" id="sliceRange" step="1" aria-label="切り取る年">
+      </div>
+      <div class="seg-mini" role="group" aria-label="切り取る幅">
+        <button type="button" data-w="1" aria-pressed="false">1年</button>
+        <button type="button" data-w="5" aria-pressed="true">5年</button>
+        <button type="button" data-w="10" aria-pressed="false">10年</button>
+      </div>
+      <button type="button" class="scrub-close" id="sliceOff" aria-label="切り取りをやめる">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>
+      </button>
+    </div>
     <div class="tip" id="tip" hidden></div>
     <div class="anchor" id="anchor" hidden>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.2 4H8.8zM12 22l-3.2-4h6.4zM2 12l4-3.2v6.4zM22 12l-4 3.2V8.8z"/><circle cx="12" cy="12" r="1.8"/></svg>
@@ -542,7 +596,11 @@ const brandOf = (s) => data.brands.get(s.brandId) || UNKNOWN_BRAND;
 const activeBrands = new Set();
 const seenBrands = new Set();
 const inYearRange = (s) => s.year >= CONFIG.axes.year.min && s.year <= CONFIG.axes.year.max;
-const isShown = (s) => inYearRange(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
+// 年代で切り取る：start 年から w 年分（start〜start+w-1）だけを表示する
+const slice = { on: false, start: 2017, w: 5, playing: false, timer: 0 };
+const sliceEnd = () => slice.start + slice.w - 1;
+const inSlice = (s) => !slice.on || (s.year >= slice.start && s.year <= sliceEnd());
+const isShown = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
 
 // mode: loading（接続中）/ shared（共有データ）/ local（この端末だけ）/ unavailable（共有データに入れない）
 const store = { mode: 'loading', loaded: false, canWrite: false, canUpload: false, db: null, assets: null };
@@ -980,10 +1038,14 @@ function applySpriteStates() {
   const w = ui.cardSize, h = w * CARD.h / CARD.w;
   for (const e of entries.values()) {
     const id = e.shoe.id;
-    e.sprite.visible = isShown(e.shoe);
+    const vis = isShown(e.shoe);
+    if (vis && !e.sprite.visible && !reduceMotion) e.appear = 0;   // 新しく現れたカードは小さい状態から広がる
+    e.sprite.visible = vis;
     const lifted = id === ui.hoverId || id === ui.listHoverId || id === ui.selectedId;
     const k = lifted ? 1.32 : 1;
-    e.sprite.scale.set(w * k, h * k, 1);
+    e.baseW = w * k; e.baseH = h * k;
+    const a = e.appear == null ? 1 : 0.55 + 0.45 * (1 - Math.pow(1 - e.appear, 3));
+    e.sprite.scale.set(e.baseW * a, e.baseH * a, 1);
     e.sprite.material.opacity = dimFocus && !lifted ? 0.3 : 1;
     e.sprite.material.depthTest = !lifted;
     e.sprite.renderOrder = lifted ? 10 : 0;
@@ -1006,14 +1068,23 @@ const CAPTIONS = {
   side: 'x = 0 の平面（横：年代／縦：反発）',
   top: 'y = 0 の平面（横：速さ／縦：年代）',
 };
+function sliceLabel() { return slice.w === 1 ? `${slice.start}年` : `${slice.start}〜${sliceEnd()}年`; }
+function captionText() {
+  if (!slice.on) return CAPTIONS[view.mode];
+  if (view.mode === 'front') return `${sliceLabel()}の断面（横：速さ／縦：反発）`;
+  return `${CAPTIONS[view.mode]}／${sliceLabel()}を切り取り中`;
+}
 const view = { ...PRESETS['3d'], mode: '3d' };
 const goal = { ...PRESETS['3d'] };
 if (!reduceMotion) { view.theta -= 1.1; view.phi = 0.1; view.zoom = 1.15; }
 
 const camDir = new THREE.Vector3();
+const _pan = new THREE.Vector3();
 function applyCamera() {
   const aspect = viewport.w / viewport.h;
-  const visibleH = FIT * view.zoom * Math.max(1, 1 / aspect);
+  // 画面下にバー（年代の切り取り）が出ているときは、その分だけグラフを上に寄せて小さく収める
+  const res = view.reserve || 0;
+  const visibleH = FIT * view.zoom * Math.max(1, 1 / aspect) * (viewport.h / Math.max(1, viewport.h - res));
   const dist = (visibleH / 2) / Math.tan(rad(view.fov) / 2);
   const cp = Math.cos(view.phi);
   camDir.set(cp * Math.sin(view.theta), Math.sin(view.phi), cp * Math.cos(view.theta));
@@ -1025,6 +1096,11 @@ function applyCamera() {
   camera.lookAt(ORIGIN);
   camera.updateProjectionMatrix();
   camera.updateMatrixWorld();
+  if (res > 0.5) {
+    _pan.setFromMatrixColumn(camera.matrixWorld, 1).multiplyScalar(-(res / 2) / viewport.h * visibleH);
+    camera.position.add(_pan);
+    camera.updateMatrixWorld();
+  }
 }
 function step(dt) {
   if (auto.active) {
@@ -1034,9 +1110,9 @@ function step(dt) {
   }
   const k = 1 - Math.exp(-(reduceMotion ? 60 : 9) * dt);
   let moving = false;
-  for (const key of ['theta', 'phi', 'zoom']) {
-    const d = goal[key] - view[key];
-    if (Math.abs(d) > 1e-4) { view[key] += d * k; moving = true; } else view[key] = goal[key];
+  for (const key of ['theta', 'phi', 'zoom', 'reserve']) {
+    const d = (goal[key] || 0) - (view[key] || 0);
+    if (Math.abs(d) > (key === 'reserve' ? 0.3 : 1e-4)) { view[key] = (view[key] || 0) + d * k; moving = true; } else view[key] = goal[key] || 0;
   }
   const tf = Math.log(Math.tan(rad(view.fov) / 2));
   const tg = Math.log(Math.tan(rad(goal.fov) / 2));
@@ -1064,7 +1140,7 @@ function rotateBy(dTheta, dPhi) {
 function zoomBy(f) { goal.zoom = clamp(goal.zoom * f, ZOOM_MIN, ZOOM_MAX); }
 function updateModeUI() {
   document.querySelectorAll('.seg-btn[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === view.mode)));
-  if (!auto.active) $('#caption').textContent = CAPTIONS[view.mode];
+  if (!auto.active) $('#caption').textContent = captionText();
   updateHelperVisibility();
   markDirty();
 }
@@ -1219,7 +1295,7 @@ function stopAuto() {
   auto.active = false;
   anchorEl.hidden = true;
   stage.classList.remove('autoscrolling');
-  $('#caption').textContent = CAPTIONS[view.mode];
+  $('#caption').textContent = captionText();
 }
 stage.addEventListener('mousedown', (e) => {
   if (e.button !== 1) return;
@@ -1339,6 +1415,7 @@ function onFilterChange() {
   const hov = ui.listHoverId && data.shoes.get(ui.listHoverId);
   if (hov && !isShown(hov)) ui.listHoverId = null;
   syncChips(); renderCards(); applySpriteStates(); rebuildHelpers();
+  updateSliceCount();
 }
 allBtn.addEventListener('click', () => { for (const id of data.brands.keys()) activeBrands.add(id); onFilterChange(); });
 
@@ -1463,6 +1540,7 @@ function applyDataNow() {
   applySpriteStates();
   rebuildHelpers();
   updateStageMessage();
+  updateSliceCount();
   tipFor = null;
   if (brandDlg.open) renderBrandRows();
 }
@@ -1902,7 +1980,7 @@ f.save.addEventListener('click', async () => {
     cardDlg.close();
     activeBrands.add(brandId);
     select(shoe.id, { scrollList: true });
-    toast((editing ? `「${name}」を更新しました` : `「${name}」を追加しました`) + (inYearRange(shoe) ? '' : '（年代の範囲外のため、グラフには表示されていません）'));
+    toast((editing ? `「${name}」を更新しました` : `「${name}」を追加しました`) + (inYearRange(shoe) && inSlice(shoe) ? '' : '（表示中の年代の外のため、グラフには表示されていません）'));
   } catch (e) {
     if (uploaded && uploaded.imageAsset) api.dropAsset(uploaded.imageAsset);
     f.err.textContent = writeErrorMessage(e);
@@ -2065,6 +2143,7 @@ function toast(msg) {
    ===================================================================== */
 function onThemeChange() {
   colors = readColors();
+  sliceFillMat.color.copy(colors.z); sliceEdgeMat.color.copy(colors.z);
   buildWalls(); recolorAxes();
   dropMat.color.copy(colors.drop);
   markDirty();
@@ -2073,11 +2152,13 @@ const darkMQ = matchMedia('(prefers-color-scheme: dark)');
 if (darkMQ.addEventListener) darkMQ.addEventListener('change', onThemeChange);
 new MutationObserver(onThemeChange).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+const sliceBarEl = $('#scrubber');
 function resize() {
   const w = stageWrap.clientWidth, h = stageWrap.clientHeight;
   if (!w || !h) return;
   viewport.w = w; viewport.h = h;
   renderer.setSize(w, h);
+  if (slice.on && sliceBarEl) goal.reserve = sliceBarEl.offsetHeight + 44;   // 画面幅でバーの高さが変わるため
   markDirty();
 }
 new ResizeObserver(resize).observe(stageWrap);
@@ -2098,13 +2179,21 @@ function setYearRange(min, max, opts = {}) {
   }
   yrMinEl.value = min; yrMaxEl.value = max;
   yrResetBtn.disabled = min === YEAR_DEFAULT.min && max === YEAR_DEFAULT.max;
+  syncSliceUI(); updateSlab();
   if (opts.updateUrl !== false) writeYearToUrl();
   onFilterChange();
+  updateModeUI();
 }
 function moveSprites(dt) {
   const k = 1 - Math.exp(-8 * dt);
   let moving = false;
   for (const e of entries.values()) {
+    if (e.appear != null && e.appear < 1) {
+      e.appear = Math.min(1, e.appear + dt * 5);
+      const a = 0.55 + 0.45 * (1 - Math.pow(1 - e.appear, 3));
+      e.sprite.scale.set(e.baseW * a, e.baseH * a, 1);
+      moving = true;
+    }
     const p = e.sprite.position;
     if (p.distanceToSquared(e.pos) > 1e-6) {
       p.lerp(e.pos, k);
@@ -2148,6 +2237,8 @@ function writeYearToUrl() {
     const a = CONFIG.axes.year;
     if (a.min === YEAR_DEFAULT.min && a.max === YEAR_DEFAULT.max) { u.searchParams.delete('from'); u.searchParams.delete('to'); }
     else { u.searchParams.set('from', a.min); u.searchParams.set('to', a.max); }
+    if (slice.on) { u.searchParams.set('slice', slice.start); u.searchParams.set('w', slice.w); }
+    else { u.searchParams.delete('slice'); u.searchParams.delete('w'); }
     history.replaceState(null, '', u.toString());
   } catch (_) {}
 }
@@ -2160,6 +2251,110 @@ function writeYearToUrl() {
   CONFIG.axes.year.tick = yearStep(CONFIG.axes.year.max - CONFIG.axes.year.min);
   yrMinEl.value = CONFIG.axes.year.min; yrMaxEl.value = CONFIG.axes.year.max;
   yrResetBtn.disabled = CONFIG.axes.year.min === YEAR_DEFAULT.min && CONFIG.axes.year.max === YEAR_DEFAULT.max;
+})();
+
+/* ---------- 年代で切り取る（断面） ---------- */
+const sliceRoot = new THREE.Group();
+sliceRoot.visible = false;
+scene.add(sliceRoot);
+const sliceFillMat = new THREE.MeshBasicMaterial({ color: colors.z, transparent: true, opacity: 0.05, depthWrite: false, side: THREE.DoubleSide });
+const sliceEdgeMat = new THREE.LineBasicMaterial({ color: colors.z, transparent: true, opacity: 0.8 });
+(() => {
+  const box = new THREE.BoxGeometry(1, 1, 1);
+  const fill = new THREE.Mesh(box, sliceFillMat);
+  fill.renderOrder = -1;                     // カードより先に描いて、カードを色で覆わない
+  sliceRoot.add(fill, new THREE.LineSegments(new THREE.EdgesGeometry(box), sliceEdgeMat));
+})();
+const sl = {
+  btn: $('#sliceBtn'), bar: $('#scrubber'), big: $('#sliceYear'), range: $('#sliceRange'),
+  label: $('#sliceLabel'), count: $('#sliceCount'), play: $('#slicePlay'), off: $('#sliceOff'),
+  widths: [...document.querySelectorAll('.seg-mini [data-w]')],
+};
+const maxSliceStart = () => Math.max(CONFIG.axes.year.min, CONFIG.axes.year.max - slice.w + 1);
+function syncSliceUI() {
+  slice.start = clamp(slice.start, CONFIG.axes.year.min, maxSliceStart());
+  sl.range.min = CONFIG.axes.year.min;
+  sl.range.max = maxSliceStart();
+  sl.range.value = slice.start;
+  sl.label.textContent = sliceLabel();
+  sl.big.textContent = slice.w === 1 ? String(slice.start) : `${slice.start}–${sliceEnd()}`;
+  sl.widths.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.w === slice.w)));
+  sl.btn.setAttribute('aria-pressed', String(slice.on));
+  sl.bar.hidden = !slice.on;
+  sl.big.hidden = !slice.on;
+  goal.reserve = slice.on ? sl.bar.offsetHeight + 44 : 0;
+}
+function updateSliceCount() {
+  if (!slice.on) return;
+  let n = 0;
+  for (const s of data.shoes.values()) if (isShown(s)) n++;
+  sl.count.textContent = n ? `${n}足` : '該当なし';
+}
+function updateSlab() {
+  sliceRoot.visible = slice.on;
+  if (slice.on) {
+    const z1 = clamp(-axisToWorld('year', slice.start - 0.5), -H, H);
+    const z2 = clamp(-axisToWorld('year', sliceEnd() + 0.5), -H, H);
+    sliceRoot.position.set(0, 0, (z1 + z2) / 2);
+    sliceRoot.scale.set(2 * H, 2 * H, Math.max(0.04, Math.abs(z1 - z2)));
+  }
+  markDirty();
+}
+function refreshSlice() {
+  syncSliceUI();
+  updateSlab();
+  writeYearToUrl();
+  onFilterChange();
+  updateModeUI();
+}
+function setSliceOn(on) {
+  if (!on) stopSlicePlay();
+  slice.on = on;
+  if (on && view.mode !== 'front') setMode('front');   // 切り取ったら速さ×反発の平面で見る
+  refreshSlice();
+}
+function stopSlicePlay() {
+  slice.playing = false;
+  clearInterval(slice.timer);
+  sl.play.querySelector('.i-play').hidden = false;
+  sl.play.querySelector('.i-pause').hidden = true;
+  sl.play.setAttribute('aria-label', '年代を順番に再生');
+}
+function startSlicePlay() {
+  if (slice.start >= maxSliceStart()) slice.start = CONFIG.axes.year.min;   // 最後まで行っていたら最初から
+  slice.playing = true;
+  sl.play.querySelector('.i-play').hidden = true;
+  sl.play.querySelector('.i-pause').hidden = false;
+  sl.play.setAttribute('aria-label', '再生を止める');
+  refreshSlice();
+  slice.timer = setInterval(() => {
+    if (slice.start >= maxSliceStart()) { stopSlicePlay(); return; }
+    slice.start += 1;
+    refreshSlice();
+  }, slice.w === 1 ? 800 : 600);
+}
+sl.btn.addEventListener('click', () => setSliceOn(!slice.on));
+sl.off.addEventListener('click', () => setSliceOn(false));
+sl.range.addEventListener('input', () => { stopSlicePlay(); slice.start = +sl.range.value; refreshSlice(); });
+sl.play.addEventListener('click', () => { if (slice.playing) stopSlicePlay(); else startSlicePlay(); });
+sl.widths.forEach((b) => b.addEventListener('click', () => {
+  slice.w = +b.dataset.w;
+  if (slice.playing) { stopSlicePlay(); startSlicePlay(); } else refreshSlice();
+}));
+// URL の ?slice=2017&w=5 で、切り取った状態のまま開ける
+(function readSliceFromUrl() {
+  const q = new URLSearchParams(location.search);
+  const st = parseInt(q.get('slice'), 10), w = parseInt(q.get('w'), 10);
+  if ([1, 5, 10].includes(w)) slice.w = w;
+  if (Number.isFinite(st)) {
+    slice.start = st;
+    slice.on = true;
+    view.mode = 'front';
+    Object.assign(view, PRESETS.front); Object.assign(goal, PRESETS.front);
+  }
+  syncSliceUI();
+  view.reserve = goal.reserve;
+  updateSlab();
 })();
 
 let last = performance.now();
