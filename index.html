@@ -145,16 +145,16 @@ button:disabled { cursor: default; }
 }
 .tip {
   position: absolute; left: 0; top: 0; z-index: 6;
-  min-width: 184px; max-width: 250px; padding: 10px 13px 12px;
+  min-width: 184px; max-width: 290px; padding: 10px 13px 12px;
   background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
   box-shadow: 0 14px 34px -14px var(--shadow); pointer-events: none;
 }
 .tip-brand { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink-2); font-weight: 500; }
 .tip-brand::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex: none; }
 .tip-name { font-family: var(--font-num); font-weight: 700; font-size: 21px; line-height: 1.12; margin: 3px 0 9px; }
-.tip-grid { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 16px; margin: 0; }
+.tip-grid { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 4px 16px; margin: 0; }
 .tip-grid dt { font-size: 11px; color: var(--ink-3); }
-.tip-grid dd { margin: 0; font-family: var(--font-num); font-weight: 600; font-size: 20px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.tip-grid dd { white-space: nowrap; margin: 0; font-family: var(--font-num); font-weight: 600; font-size: 20px; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .tip-note { margin: 8px 0 0; font-size: 12px; color: var(--ink-2); line-height: 1.5; }
 
 .anchor {
@@ -216,6 +216,24 @@ button:disabled { cursor: default; }
 
 .options { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
 .opt { display: inline-flex; align-items: center; gap: 8px; }
+.axis-pick { flex-basis: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 8px; align-items: center; }
+.axis-pick select { width: 100%; min-width: 0; }
+.axis-pick .swap { grid-column: 3; grid-row: 1 / span 2; height: 100%; min-height: 28px; }
+.swap { width: 30px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--ink-2); }
+.swap:hover { background: var(--surface-2); color: var(--ink); }
+.swap svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.axis-note { grid-column: 1 / -1; margin: 2px 0 0; font-size: 12px; color: var(--warn); font-weight: 600; line-height: 1.5; }
+.list-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 18px 2px; }
+.list-tools .links { display: flex; gap: 14px; }
+.card-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; align-items: center; }
+.eye { width: 32px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--ink-2); }
+.eye:hover { background: var(--surface-2); color: var(--ink); }
+.eye svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.eye[aria-pressed="false"] { color: var(--ink-3); border-style: dashed; }
+.card.is-off .card-main, .card.is-missing .card-main { opacity: 0.45; }
+.card .miss { color: var(--warn); font-size: 11px; font-weight: 600; text-align: right; white-space: nowrap; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-hint { margin: -6px 0 0; }
 .yr-range { flex-basis: 100%; flex-wrap: wrap; gap: 6px 8px; }
 .yr-range .yr {
   width: 74px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
@@ -232,19 +250,20 @@ button:disabled { cursor: default; }
 .card-main { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; text-align: left; padding: 9px 10px; border: 0; border-radius: 12px; background: transparent; }
 .card-main:hover { background: var(--surface-2); }
 .card.is-selected .card-main { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--c); }
-.card.can-edit .card-main { padding-right: 56px; }
+.card .card-main { padding-right: 46px; }
+.card.can-edit .card-main { padding-right: 96px; }
 .thumb { width: 76px; height: 60px; object-fit: contain; border-radius: 9px; background: #f1f3f5; border: 1px solid var(--line); display: block; }
 .meta { min-width: 0; }
 .meta .brand { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); font-weight: 500; min-width: 0; }
 .meta .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
 .meta .brand .bn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .meta .name { font-family: var(--font-num); font-size: 17px; font-weight: 700; line-height: 1.15; margin: 1px 0 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.stats { display: grid; grid-template-columns: auto minmax(0, 1fr) 38px; gap: 2px 8px; align-items: center; font-size: 11px; color: var(--ink-3); }
+.stats { display: grid; grid-template-columns: auto minmax(0, 1fr) 54px; gap: 2px 8px; align-items: center; font-size: 11px; color: var(--ink-3); }
 .bar { position: relative; height: 5px; border-radius: 3px; background: var(--line); }
 .bar.bi::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--ink-3); }
 .bar i { position: absolute; top: 0; bottom: 0; border-radius: 3px; min-width: 2px; }
 .stats .v { font-family: var(--font-num); font-size: 14px; font-weight: 600; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
-.card-edit { position: absolute; top: 10px; right: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 2px 9px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
+.card-edit { height: 28px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 2px 9px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
 .card-edit:hover { background: var(--surface-2); }
 .empty { margin: 0; padding: 24px 22px; font-size: 13.5px; color: var(--ink-2); }
 .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 18px 16px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-3); }
@@ -372,8 +391,8 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
       </div>
       <div class="seg-mini" role="group" aria-label="切り取る幅">
         <button type="button" data-w="1" aria-pressed="false">1年</button>
-        <button type="button" data-w="3" aria-pressed="true">3年</button>
-        <button type="button" data-w="5" aria-pressed="false">5年</button>
+        <button type="button" data-w="5" aria-pressed="true">5年</button>
+        <button type="button" data-w="10" aria-pressed="false">10年</button>
       </div>
       <button type="button" class="scrub-close" id="sliceOff" aria-label="切り取りをやめる">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>
@@ -413,6 +432,16 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
     </div>
 
     <div class="options">
+      <div class="opt axis-pick" role="group" aria-label="グラフの軸">
+        <span>横軸</span>
+        <select id="axX" aria-label="横軸"></select>
+        <button type="button" class="swap" id="axSwap" aria-label="横軸と縦軸を入れ替える" title="横軸と縦軸を入れ替える">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 2v12M2 5l3-3 3 3M11 14V2M8 11l3 3 3-3"/></svg>
+        </button>
+        <span>縦軸</span>
+        <select id="axY" aria-label="縦軸"></select>
+        <p class="axis-note" id="axNote" hidden></p>
+      </div>
       <div class="opt yr-range" role="group" aria-label="年代の範囲">
         <span>年代の範囲</span>
         <input type="number" id="yrMin" class="yr" step="1" inputmode="numeric" aria-label="開始年">
@@ -425,18 +454,27 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
         <select id="sortSel">
           <option value="year">発売年</option>
           <option value="brand">ブランド</option>
-          <option value="speed">速さ</option>
-          <option value="rebound">反発</option>
+          <option value="speed">速さ（速い順）</option>
+          <option value="rebound">反発（高い順）</option>
+          <option value="weight">重さ（軽い順）</option>
+          <option value="price">価格（安い順）</option>
         </select>
       </label>
       <label class="opt">カードの大きさ <input type="range" id="sizeRange" min="0.8" max="2.8" step="0.05"></label>
       <label class="opt"><input type="checkbox" id="helperChk" checked> 床への補助線</label>
     </div>
 
+    <div class="list-tools">
+      <span class="sub">グラフに表示</span>
+      <span class="links">
+        <button type="button" class="link" id="showAllShoes">すべて表示</button>
+        <button type="button" class="link" id="hideAllShoes">すべて非表示</button>
+      </span>
+    </div>
     <ul class="cards" id="cards"></ul>
     <p class="empty" id="empty" hidden></p>
     <div class="foot">
-      <p>速さ・反発は −5〜+5 の相対評価です。</p>
+      <p>速さ・反発は −5〜+5 の相対評価、重さは g、価格は円です。</p>
       <span class="links">
         <button type="button" class="link" id="discardBtn" hidden>下書きを破棄</button>
         <button type="button" class="link" id="jsonBtn" hidden>データを書き出す</button>
@@ -482,6 +520,11 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
       <span class="ends"><span>低反発・安定</span><span>高反発</span></span>
     </label>
     <label class="field"><span>発売年</span><input type="number" id="fYear" step="1" inputmode="numeric"></label>
+    <div class="field-row">
+      <label class="field"><span>重さ（g・任意）</span><input type="number" id="fWeight" min="30" max="2000" step="1" inputmode="numeric" placeholder="例：198"></label>
+      <label class="field"><span>価格（円・任意）</span><input type="number" id="fPrice" min="0" max="1000000" step="10" inputmode="numeric" placeholder="例：27500"></label>
+    </div>
+    <p class="small field-hint">重さは「片足・27cm」など基準をそろえると比べやすくなります。空欄のシューズは、その軸を選んだときグラフに出ません。</p>
     <label class="field"><span>メモ（任意・グラフ上の詳細に表示）</span><input type="text" id="fNote" maxlength="120" autocomplete="off" placeholder="例：レース向けの厚底カーボン"></label>
     <p class="err" id="fErr" role="alert"></p>
   </div>
@@ -544,10 +587,25 @@ const CONFIG = {
   axes: {
     speed:   { min: -5,   max: 5,    tick: 1 },   // X：遅い(-) ↔ 速い(+)
     rebound: { min: -5,   max: 5,    tick: 1 },   // Y：低反発・安定(-) ↔ 高反発(+)
+    weight:  { min: 50,  max: 350,  tick: 25 },   // 軽い ↔ 重い（g）
+    price:   { min: 5000, max: 45000, tick: 5000 }, // 安価 ↔ 高価（円）
     year:    { min: 1970, max: 2030, tick: 10 },  // Z：昔 ↔ 今（初期表示の範囲。画面の「年代の範囲」や URL の ?from=2010&to=2026 で変えられる）
   },
   draftKey: 'shoe-atlas-3d:draft:v1',   // 編集モードの下書き（このブラウザだけ）
 };
+// 横軸・縦軸に選べる4つの指標（奥行きの年代は固定）
+const METRICS = {
+  speed:   { label: '速さ', neg: '遅い', pos: '速い', bipolar: true, labelStep: 2,
+             fmt: (v) => signed(v), tickFmt: (v) => signed(v).replace('.0', '') },
+  rebound: { label: '反発', neg: '低反発・安定', pos: '高反発', bipolar: true, labelStep: 2,
+             fmt: (v) => signed(v), tickFmt: (v) => signed(v).replace('.0', '') },
+  weight:  { label: '重さ', neg: '軽い', pos: '重い', unit: true, labelStep: 50,
+             fmt: (v) => `${Math.round(v)}g`, tickFmt: (v) => `${v}g` },
+  price:   { label: '価格', neg: '安価', pos: '高価', unit: true, labelStep: 10000,
+             fmt: (v) => `${Math.round(v).toLocaleString('ja-JP')}円`, tickFmt: (v) => `${+(v / 10000).toFixed(1)}万円`,
+             short: (v) => `${+(v / 10000).toFixed(1)}万円` },
+};
+const METRIC_KEYS = ['speed', 'rebound', 'weight', 'price'];
 const YEAR_DEFAULT = { min: CONFIG.axes.year.min, max: CONFIG.axes.year.max };
 const YEAR_LIMIT = { min: 1900, max: 2100 };   // 発売年・表示範囲として入力できる年
 const PALETTE = ['#ef6c1a', '#3d4450', '#1e63c8', '#0f9d8a', '#c92a62', '#5b3fc4', '#d23a2f', '#5b8a1c', '#b7791f', '#0e7490', '#9333ea', '#64748b'];
@@ -600,7 +658,11 @@ const inYearRange = (s) => s.year >= CONFIG.axes.year.min && s.year <= CONFIG.ax
 const slice = { on: false, start: 2017, w: 5, playing: false, timer: 0 };
 const sliceEnd = () => slice.start + slice.w - 1;
 const inSlice = (s) => !slice.on || (s.year >= slice.start && s.year <= sliceEnd());
-const isShown = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
+const hiddenShoes = new Set();   // 一覧の目のボタンでグラフから外したシューズ
+const hasValue = (s, key) => typeof s[key] === 'number' && Number.isFinite(s[key]);
+// 一覧に出す条件（ブランド・年代）と、グラフに出す条件（さらに非表示でなく、選んだ軸の値があること）
+const passesFilters = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
+const isShown = (s) => passesFilters(s) && !hiddenShoes.has(s.id) && hasValue(s, ui.xKey) && hasValue(s, ui.yKey);
 
 // mode: loading（接続中）/ shared（共有データ）/ local（この端末だけ）/ unavailable（共有データに入れない）
 const store = { mode: 'loading', loaded: false, canWrite: false, canUpload: false, db: null, assets: null };
@@ -612,6 +674,8 @@ const ui = {
   cardSize: desktopMQ.matches ? 1.45 : 2.1,
   helpers: true,
   sort: 'year',
+  xKey: 'speed',     // 横軸
+  yKey: 'rebound',   // 縦軸
 };
 
 function readBrand(id, d) {
@@ -627,6 +691,8 @@ function readShoe(id, d) {
     name: d.name.trim().slice(0, 80),
     year: Math.round(num(d.year, 1800, 2200, CONFIG.axes.year.max)),
     speed: num(d.speed, -10, 10, 0),
+    weight: typeof d.weight === 'number' && Number.isFinite(d.weight) ? clamp(d.weight, 30, 2000) : null,
+    price: typeof d.price === 'number' && Number.isFinite(d.price) ? clamp(d.price, 0, 1000000) : null,
     rebound: num(d.rebound, -10, 10, 0),
     imageAsset: typeof d.imageAsset === 'string' && /^[A-Za-z0-9_-]{8,64}$/.test(d.imageAsset) ? d.imageAsset : null,
     imageData: [d.imageData, d.image].find((v) => typeof v === 'string' && v.startsWith('data:image/')) || null,
@@ -681,7 +747,8 @@ function axisToWorld(key, v) {
 }
 function worldPos(s) {
   const c = (v) => clamp(v, -H * 1.1, H * 1.1);
-  return new THREE.Vector3(c(axisToWorld('speed', s.speed)), c(axisToWorld('rebound', s.rebound)), c(-axisToWorld('year', s.year)));
+  const v = (key) => (hasValue(s, key) ? c(axisToWorld(key, s[key])) : 0);
+  return new THREE.Vector3(v(ui.xKey), v(ui.yKey), c(-axisToWorld('year', s.year)));
 }
 function tickValues(key) {
   const a = CONFIG.axes[key], step = a.tick || 1, out = [];
@@ -698,9 +765,8 @@ const wallFillMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.
 const wallLineMat = new THREE.LineBasicMaterial({ vertexColors: true });
 let wallGeos = [];
 function wallLineGeometry(axis) {
-  const xs = tickValues('speed').map((v) => axisToWorld('speed', v));
-  const ys = tickValues('rebound').map((v) => axisToWorld('rebound', v));
-  const zs = [...new Set([H, -H, ...tickValues('year').map((v) => -axisToWorld('year', v))].map((z) => +z.toFixed(6)))];
+  const lines = (key, sign) => [...new Set([H, -H, ...tickValues(key).map((v) => sign * axisToWorld(key, v))].map((w) => +w.toFixed(6)))];
+  const xs = lines(ui.xKey, 1), ys = lines(ui.yKey, 1), zs = lines('year', -1);
   const pos = [], col = [];
   const strong = (w) => Math.abs(w) < 1e-6 || Math.abs(Math.abs(w) - H) < 1e-6;
   const push = (a, b, s) => { pos.push(...a, ...b); const c = s ? colors.strong : colors.grid; col.push(c.r, c.g, c.b, c.r, c.g, c.b); };
@@ -955,7 +1021,7 @@ function drawCard(canvas, shoe, img) {
 const shoeRoot = new THREE.Group();
 scene.add(shoeRoot);
 const entries = new Map();
-const cardSig = (s) => { const b = brandOf(s); return [s.name, s.year, s.speed, s.rebound, imageURL(s), b.name, b.color].join('\u0001'); };
+const cardSig = (s) => { const b = brandOf(s); return [s.name, s.year, s.speed, s.rebound, s.weight, s.price, imageURL(s), b.name, b.color].join('\u0001'); };
 
 function paintEntry(e) {
   drawCard(e.canvas, e.shoe, e.img);
@@ -1062,17 +1128,20 @@ const PRESETS = {
   side:  { theta: Math.PI / 2, phi: 0,       fov: FOV_FLAT, zoom: 0.86 },
   top:   { theta: 0,           phi: PHI_MAX, fov: FOV_FLAT, zoom: 0.86 },
 };
-const CAPTIONS = {
-  '3d': '3D ビュー',
-  front: 'z = 0 の平面（横：速さ／縦：反発）',
-  side: 'x = 0 の平面（横：年代／縦：反発）',
-  top: 'y = 0 の平面（横：速さ／縦：年代）',
-};
+function baseCaption(mode) {
+  const X = METRICS[ui.xKey].label, Y = METRICS[ui.yKey].label;
+  return {
+    '3d': '3D ビュー',
+    front: `z = 0 の平面（横：${X}／縦：${Y}）`,
+    side: `x = 0 の平面（横：年代／縦：${Y}）`,
+    top: `y = 0 の平面（横：${X}／縦：年代）`,
+  }[mode];
+}
 function sliceLabel() { return slice.w === 1 ? `${slice.start}年` : `${slice.start}〜${sliceEnd()}年`; }
 function captionText() {
-  if (!slice.on) return CAPTIONS[view.mode];
-  if (view.mode === 'front') return `${sliceLabel()}の断面（横：速さ／縦：反発）`;
-  return `${CAPTIONS[view.mode]}／${sliceLabel()}を切り取り中`;
+  if (!slice.on) return baseCaption(view.mode);
+  if (view.mode === 'front') return `${sliceLabel()}の断面（横：${METRICS[ui.xKey].label}／縦：${METRICS[ui.yKey].label}）`;
+  return `${baseCaption(view.mode)}／${sliceLabel()}を切り取り中`;
 }
 const view = { ...PRESETS['3d'], mode: '3d' };
 const goal = { ...PRESETS['3d'] };
@@ -1173,10 +1242,12 @@ function buildLabels() {
     labelLayer.appendChild(el);
     labelDefs.push({ el, pos: new THREE.Vector3(...pos), axis, tick: !!opts.tick, planeOnly: !!opts.planeOnly });
   };
-  add([H + 1.1, 0, 0], 'x', { key: '速さ', text: '速い' });
-  add([-H - 1.1, 0, 0], 'x', { key: '速さ', text: '遅い' });
-  add([0, H + 0.85, 0], 'y', { key: '反発', text: '高反発' });
-  add([0, -H - 0.85, 0], 'y', { key: '反発', text: '低反発・安定' });
+  const endKey = (key, bound) => (METRICS[key].unit ? `${METRICS[key].label} ${METRICS[key].fmt(bound)}` : METRICS[key].label);
+  const X = METRICS[ui.xKey], Y = METRICS[ui.yKey], ax = CONFIG.axes[ui.xKey], ay = CONFIG.axes[ui.yKey];
+  add([H + 1.1, 0, 0], 'x', { key: endKey(ui.xKey, ax.max), text: X.pos });
+  add([-H - 1.1, 0, 0], 'x', { key: endKey(ui.xKey, ax.min), text: X.neg });
+  add([0, H + 0.85, 0], 'y', { key: endKey(ui.yKey, ay.max), text: Y.pos });
+  add([0, -H - 0.85, 0], 'y', { key: endKey(ui.yKey, ay.min), text: Y.neg });
   add([0, 0, -H - 1.1], 'z', { key: String(CONFIG.axes.year.max), text: '今' });
   add([0, 0, H + 1.1], 'z', { key: String(CONFIG.axes.year.min), text: '昔' });
   for (const yr of tickValues('year')) {
@@ -1184,10 +1255,17 @@ function buildLabels() {
     // 原点と両端（端は「昔／今」のラベルに年を出している）は省く
     if (Math.abs(z) > 0.3 && Math.abs(z) < H - 0.3) add([0, 0, z], 'z', { tick: true, text: String(yr) });
   }
-  for (const v of [-4, -2, 2, 4]) {
-    add([axisToWorld('speed', v), 0, 0], 'x', { tick: true, planeOnly: true, text: signed(v).replace('.0', '') });
-    add([0, axisToWorld('rebound', v), 0], 'y', { tick: true, planeOnly: true, text: signed(v).replace('.0', '') });
-  }
+  // 平面ビューのときだけ出す目盛り（原点と両端は省く）
+  const labelTicks = (key) => {
+    const a = CONFIG.axes[key], step = METRICS[key].labelStep, out = [];
+    for (let v = Math.ceil(a.min / step) * step; v <= a.max + 1e-9; v += step) {
+      const w = axisToWorld(key, v);
+      if (Math.abs(w) > 0.3 && Math.abs(w) < H - 0.3) out.push(+v.toFixed(6));
+    }
+    return out;
+  };
+  labelTicks(ui.xKey).forEach((v) => add([axisToWorld(ui.xKey, v), 0, 0], 'x', { tick: true, planeOnly: true, text: X.tickFmt(v) }));
+  labelTicks(ui.yKey).forEach((v) => add([0, axisToWorld(ui.yKey, v), 0], 'y', { tick: true, planeOnly: true, text: Y.tickFmt(v) }));
 }
 const _v = new THREE.Vector3();
 function project(v) {
@@ -1224,10 +1302,14 @@ function fillTip(shoe) {
   const b = document.createElement('div'); b.className = 'tip-brand'; b.textContent = brand.name;
   const n = document.createElement('div'); n.className = 'tip-name'; n.textContent = shoe.name;
   const dl = document.createElement('dl'); dl.className = 'tip-grid';
-  [['速さ', signed(shoe.speed), 'x'], ['反発', signed(shoe.rebound), 'y'], ['発売年', String(shoe.year), 'z']].forEach(([k, v, a]) => {
+  // 選んでいる軸は軸と同じ色、それ以外は通常の色
+  const rows = METRIC_KEYS.map((key) => [METRICS[key].label, hasValue(shoe, key) ? METRICS[key].fmt(shoe[key]) : '—',
+    key === ui.xKey ? 'var(--axis-x)' : key === ui.yKey ? 'var(--axis-y)' : 'var(--ink)']);
+  rows.push(['発売年', String(shoe.year), 'var(--axis-z)']);
+  rows.forEach(([k, v, color]) => {
     const d = document.createElement('div');
     const dt = document.createElement('dt'); dt.textContent = k;
-    const dd = document.createElement('dd'); dd.textContent = v; dd.style.color = `var(--axis-${a})`;
+    const dd = document.createElement('dd'); dd.textContent = v; dd.style.color = color;
     d.append(dt, dd); dl.appendChild(d);
   });
   tipEl.append(b, n, dl);
@@ -1416,6 +1498,8 @@ function onFilterChange() {
   if (hov && !isShown(hov)) ui.listHoverId = null;
   syncChips(); renderCards(); applySpriteStates(); rebuildHelpers();
   updateSliceCount();
+  updateAxisNote();
+  updateStageMessage();
 }
 allBtn.addEventListener('click', () => { for (const id of data.brands.keys()) activeBrands.add(id); onFilterChange(); });
 
@@ -1424,6 +1508,8 @@ const SORTERS = {
   brand: (a, b) => brandOf(a).name.localeCompare(brandOf(b).name, 'ja', { sensitivity: 'base' }) || a.year - b.year,
   speed: (a, b) => b.speed - a.speed || a.year - b.year,
   rebound: (a, b) => b.rebound - a.rebound || a.year - b.year,
+  weight: (a, b) => (a.weight ?? Infinity) - (b.weight ?? Infinity) || a.year - b.year,   // 未入力は最後
+  price: (a, b) => (a.price ?? Infinity) - (b.price ?? Infinity) || a.year - b.year,
 };
 function barStyle(key, v, bipolar) {
   const a = CONFIG.axes[key];
@@ -1434,7 +1520,10 @@ function barStyle(key, v, bipolar) {
 function cardEl(s) {
   const brand = brandOf(s);
   const li = document.createElement('li');
-  li.className = 'card' + (s.id === ui.selectedId ? ' is-selected' : '') + (store.canWrite ? ' can-edit' : '');
+  const off = hiddenShoes.has(s.id);
+  const missing = [ui.xKey, ui.yKey].filter((k) => !hasValue(s, k));
+  li.className = 'card' + (s.id === ui.selectedId ? ' is-selected' : '') + (store.canWrite ? ' can-edit' : '')
+    + (off ? ' is-off' : '') + (!off && missing.length ? ' is-missing' : '');
   li.dataset.id = s.id;
   li.style.setProperty('--c', brand.color);
 
@@ -1452,9 +1541,12 @@ function cardEl(s) {
   br.append(dot, bn);
   const name = document.createElement('div'); name.className = 'name'; name.textContent = s.name; name.title = s.name;
   const stats = document.createElement('div'); stats.className = 'stats';
-  stats.innerHTML =
-    `<span>速さ</span><span class="bar bi"><i style="${barStyle('speed', s.speed, true)};background:var(--axis-x)"></i></span><span class="v">${signed(s.speed)}</span>` +
-    `<span>反発</span><span class="bar bi"><i style="${barStyle('rebound', s.rebound, true)};background:var(--axis-y)"></i></span><span class="v">${signed(s.rebound)}</span>` +
+  const row = (key, color) => {
+    const m = METRICS[key];
+    if (!hasValue(s, key)) return `<span>${m.label}</span><span class="bar"></span><span class="miss">未入力</span>`;
+    return `<span>${m.label}</span><span class="bar${m.bipolar ? ' bi' : ''}"><i style="${barStyle(key, s[key], !!m.bipolar)};background:${color}"></i></span><span class="v">${(m.short || m.fmt)(s[key])}</span>`;
+  };
+  stats.innerHTML = row(ui.xKey, 'var(--axis-x)') + row(ui.yKey, 'var(--axis-y)') +
     `<span>発売</span><span class="bar"><i style="${barStyle('year', s.year, false)};background:var(--axis-z)"></i></span><span class="v">${Number(s.year)}</span>`;
   meta.append(br, name, stats);
   main.append(img, meta);
@@ -1470,19 +1562,32 @@ function cardEl(s) {
   main.addEventListener('focus', () => hot(true));
   main.addEventListener('blur', () => hot(false));
 
+  const actions = document.createElement('div'); actions.className = 'card-actions';
   if (store.canWrite) {
     const ed = document.createElement('button');
     ed.type = 'button'; ed.className = 'card-edit'; ed.textContent = '編集';
     ed.setAttribute('aria-label', `${s.name} を編集`);
     ed.addEventListener('click', () => openCard(s.id));
-    li.appendChild(ed);
+    actions.appendChild(ed);
   }
+  const eye = document.createElement('button');
+  eye.type = 'button'; eye.className = 'eye';
+  eye.setAttribute('aria-pressed', String(!off));
+  eye.setAttribute('aria-label', off ? `${s.name} をグラフに表示` : `${s.name} をグラフから隠す`);
+  eye.title = off ? 'グラフに表示' : 'グラフから隠す';
+  eye.innerHTML = off
+    ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z"/><circle cx="10" cy="10" r="2.5"/><path d="M3 17L17 3"/></svg>'
+    : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z"/><circle cx="10" cy="10" r="2.5"/></svg>';
+  eye.addEventListener('click', () => setShoeHidden(s.id, !hiddenShoes.has(s.id)));
+  actions.appendChild(eye);
+  li.appendChild(actions);
   return li;
 }
 function renderCards() {
   cardList.textContent = '';
-  const list = [...data.shoes.values()].filter(isShown).sort(SORTERS[ui.sort]);
-  if (store.loaded) countEl.innerHTML = `<b>${list.length}</b> / ${data.shoes.size} 足を表示中`;
+  const list = [...data.shoes.values()].filter(passesFilters).sort(SORTERS[ui.sort]);
+  const onGraph = [...data.shoes.values()].filter(isShown).length;
+  if (store.loaded) countEl.innerHTML = `<b>${onGraph}</b> / ${data.shoes.size} 足をグラフに表示中`;
   else countEl.textContent = '';
   if (store.loaded && data.shoes.size && !list.length) {
     emptyEl.textContent = '表示できるカードがありません。ブランドの絞り込みか、年代の範囲を変えてください。';
@@ -1541,6 +1646,7 @@ function applyDataNow() {
   rebuildHelpers();
   updateStageMessage();
   updateSliceCount();
+  updateAxisNote();
   tipFor = null;
   if (brandDlg.open) renderBrandRows();
 }
@@ -1575,6 +1681,13 @@ function updateStageMessage() {
   else if (store.loaded && data.shoes.size === 0) {
     msg = store.canWrite ? 'まだシューズカードがありません。最初の1足を登録しましょう。' : 'まだシューズカードが登録されていません。';
     add = store.canWrite;
+  } else if (store.loaded) {
+    // 選んだ軸の値がそろっていないせいでグラフが空になっている場合だけ知らせる
+    const list = [...data.shoes.values()].filter((x) => passesFilters(x) && !hiddenShoes.has(x.id));
+    if (list.length && !list.some(isShown)) {
+      const keys = [ui.xKey, ui.yKey].filter((k) => list.every((x) => !hasValue(x, k)));
+      if (keys.length) msg = `${keys.map((k) => METRICS[k].label).join('・')}のデータがまだ入っていないため、この軸の組み合わせでは表示できるシューズがありません。`;
+    }
   }
   $('#stageMsgText').textContent = msg;
   $('#stageAdd').hidden = !add;
@@ -1630,6 +1743,7 @@ function exportObject() {
     brands: sortedBrands().map(({ id, name, color }) => ({ id, name, color })),
     shoes: [...data.shoes.values()].sort(SORTERS.year).map((x) => ({
       id: x.id, brandId: x.brandId, name: x.name, year: x.year, speed: x.speed, rebound: x.rebound,
+      weight: hasValue(x, 'weight') ? x.weight : null, price: hasValue(x, 'price') ? x.price : null,
       image: x.imagePath || x.imageData || null, note: x.note || '',
     })),
   };
@@ -1639,6 +1753,8 @@ function exportDataJs() {
     '// ランニングシューズ 3Dマップのデータ',
     '// speed:   -5（遅い）〜 +5（速い）',
     '// rebound: -5（低反発・安定）〜 +5（高反発）',
+    '// weight:  重さ（g）。未入力なら null',
+    '// price:   価格（円）。未入力なら null',
     '// year:    発売年',
     '// image:   images フォルダの画像パス（例 "images/vaporfly.webp"）。なければ null で仮のイラストを表示',
     '// brandId: brands の id',
@@ -1751,7 +1867,9 @@ const api = {
     data.brands.delete(id); saveLocal(); applyData();
   },
   async putShoe(s) {
-    const body = { brandId: s.brandId, name: s.name, year: s.year, speed: s.speed, rebound: s.rebound, imageAsset: s.imageAsset || null, note: s.note || '', updatedAt: new Date().toISOString() };
+    const body = { brandId: s.brandId, name: s.name, year: s.year, speed: s.speed, rebound: s.rebound,
+      weight: hasValue(s, 'weight') ? s.weight : null, price: hasValue(s, 'price') ? s.price : null,
+      imageAsset: s.imageAsset || null, note: s.note || '', updatedAt: new Date().toISOString() };
     if (store.mode === 'shared') return withRetry(() => store.db.collection('shoes').doc(s.id).set(body));
     const prev = data.shoes.get(s.id);
     data.shoes.set(s.id, { id: s.id, ...body, imageData: s.imageData || null, imagePath: s.imagePath || null });
@@ -1788,6 +1906,7 @@ const f = {
   title: $('#cardTitle'), name: $('#fName'), brand: $('#fBrand'), nb: $('#fNewBrand'), nbName: $('#fNbName'), nbColor: $('#fNbColor'),
   imageField: $('#fImageField'), file: $('#fImage'), preview: $('#fPreview'), info: $('#fImageInfo'), pick: $('#fPick'), removeImg: $('#fRemoveImg'),
   speed: $('#fSpeed'), reb: $('#fReb'), year: $('#fYear'), note: $('#fNote'), err: $('#fErr'),
+  weight: $('#fWeight'), price: $('#fPrice'),
   oSpeed: $('#oSpeed'), oReb: $('#oReb'), del: $('#fDelete'), save: $('#fSave'), cancel: $('#fCancel'),
   pathField: $('#fPathField'), path: $('#fImagePath'),
 };
@@ -1857,6 +1976,8 @@ function openCard(id) {
   f.name.value = editing ? editing.name : '';
   f.speed.value = editing ? editing.speed : 0;
   f.reb.value = editing ? editing.rebound : 0;
+  f.weight.value = editing && hasValue(editing, 'weight') ? editing.weight : '';
+  f.price.value = editing && hasValue(editing, 'price') ? editing.price : '';
   f.year.value = editing ? editing.year : new Date().getFullYear();
   f.note.value = editing ? editing.note : '';
   f.err.textContent = '';
@@ -1944,6 +2065,16 @@ f.save.addEventListener('click', async () => {
   if (!Number.isFinite(year) || year < YEAR_LIMIT.min || year > YEAR_LIMIT.max) {
     f.err.textContent = `発売年は ${YEAR_LIMIT.min}〜${YEAR_LIMIT.max} の範囲で入力してください。`; f.year.focus(); return;
   }
+  const optNumber = (el, min, max, label) => {
+    const raw = el.value.trim();
+    if (!raw) return { v: null };
+    const v = Number(raw);
+    if (!Number.isFinite(v) || v < min || v > max) return { err: `${label}は ${min.toLocaleString('ja-JP')}〜${max.toLocaleString('ja-JP')} の範囲で入力してください（空欄でも保存できます）。` };
+    return { v };
+  };
+  const wt = optNumber(f.weight, 30, 2000, '重さ'), pr = optNumber(f.price, 0, 1000000, '価格');
+  if (wt.err) { f.err.textContent = wt.err; f.weight.focus(); return; }
+  if (pr.err) { f.err.textContent = pr.err; f.price.focus(); return; }
   let brandId = f.brand.value, newBrand = null;
   if (brandId === '__new') {
     const nbName = f.nbName.value.trim();
@@ -1973,14 +2104,16 @@ f.save.addEventListener('click', async () => {
     }
     const shoe = {
       id: editing ? editing.id : api.newId('shoes'),
-      brandId, name, year, speed: +f.speed.value, rebound: +f.reb.value, imageAsset, imageData, imagePath, note: f.note.value.trim(),
+      brandId, name, year, speed: +f.speed.value, rebound: +f.reb.value, weight: wt.v, price: pr.v,
+      imageAsset, imageData, imagePath, note: f.note.value.trim(),
     };
     await api.putShoe(shoe);
     if (oldAsset && oldAsset !== imageAsset) setTimeout(() => api.dropAsset(oldAsset), 1500);
     cardDlg.close();
     activeBrands.add(brandId);
     select(shoe.id, { scrollList: true });
-    toast((editing ? `「${name}」を更新しました` : `「${name}」を追加しました`) + (inYearRange(shoe) && inSlice(shoe) ? '' : '（表示中の年代の外のため、グラフには表示されていません）'));
+    toast((editing ? `「${name}」を更新しました` : `「${name}」を追加しました`) + (!(inYearRange(shoe) && inSlice(shoe)) ? '（表示中の年代の外のため、グラフには表示されていません）'
+      : !(hasValue(shoe, ui.xKey) && hasValue(shoe, ui.yKey)) ? `（${[ui.xKey, ui.yKey].filter((k) => !hasValue(shoe, k)).map((k) => METRICS[k].label).join('・')}が空欄のため、グラフには表示されていません）` : ''));
   } catch (e) {
     if (uploaded && uploaded.imageAsset) api.dropAsset(uploaded.imageAsset);
     f.err.textContent = writeErrorMessage(e);
@@ -2158,7 +2291,7 @@ function resize() {
   if (!w || !h) return;
   viewport.w = w; viewport.h = h;
   renderer.setSize(w, h);
-  if (slice.on && sliceBarEl) goal.reserve = sliceBarEl.offsetHeight + 44;   // 画面幅でバーの高さが変わるため
+  if (slice.on && sliceBarEl) goal.reserve = sliceBarEl.offsetHeight + 50;   // 画面幅でバーの高さが変わるため
   markDirty();
 }
 new ResizeObserver(resize).observe(stageWrap);
@@ -2239,6 +2372,10 @@ function writeYearToUrl() {
     else { u.searchParams.set('from', a.min); u.searchParams.set('to', a.max); }
     if (slice.on) { u.searchParams.set('slice', slice.start); u.searchParams.set('w', slice.w); }
     else { u.searchParams.delete('slice'); u.searchParams.delete('w'); }
+    if (ui.xKey !== 'speed' || ui.yKey !== 'rebound') { u.searchParams.set('x', ui.xKey); u.searchParams.set('y', ui.yKey); }
+    else { u.searchParams.delete('x'); u.searchParams.delete('y'); }
+    if (hiddenShoes.size) u.searchParams.set('hide', [...hiddenShoes].join(','));
+    else u.searchParams.delete('hide');
     history.replaceState(null, '', u.toString());
   } catch (_) {}
 }
@@ -2282,7 +2419,7 @@ function syncSliceUI() {
   sl.btn.setAttribute('aria-pressed', String(slice.on));
   sl.bar.hidden = !slice.on;
   sl.big.hidden = !slice.on;
-  goal.reserve = slice.on ? sl.bar.offsetHeight + 44 : 0;
+  goal.reserve = slice.on ? sl.bar.offsetHeight + 50 : 60;   // 下のボタン列（＋切り取りバー）に重ならないよう空ける
 }
 function updateSliceCount() {
   if (!slice.on) return;
@@ -2355,6 +2492,72 @@ sl.widths.forEach((b) => b.addEventListener('click', () => {
   syncSliceUI();
   view.reserve = goal.reserve;
   updateSlab();
+})();
+
+/* ---------- 軸の選択（横軸・縦軸） ---------- */
+const axX = $('#axX'), axY = $('#axY'), axNote = $('#axNote');
+METRIC_KEYS.forEach((key) => {
+  const m = METRICS[key];
+  [axX, axY].forEach((sel) => {
+    const o = document.createElement('option');
+    o.value = key; o.textContent = `${m.label}（${m.neg}↔${m.pos}）`;
+    sel.appendChild(o);
+  });
+});
+function updateAxisNote() {
+  const list = [...data.shoes.values()].filter((x) => passesFilters(x) && !hiddenShoes.has(x.id));
+  const miss = list.filter((x) => !hasValue(x, ui.xKey) || !hasValue(x, ui.yKey));
+  if (!miss.length) { axNote.hidden = true; return; }
+  const keys = [ui.xKey, ui.yKey].filter((k) => miss.some((x) => !hasValue(x, k))).map((k) => METRICS[k].label).join('・');
+  axNote.textContent = `${keys}が未入力の ${miss.length} 足はグラフに出ていません` + (store.canWrite ? '（「編集」から入力できます）' : '');
+  axNote.hidden = false;
+}
+function syncAxisUI() {
+  axX.value = ui.xKey; axY.value = ui.yKey;
+  const X = METRICS[ui.xKey].label, Y = METRICS[ui.yKey].label;
+  document.querySelector('[data-mode="front"] small').textContent = `${X} × ${Y}`;
+  document.querySelector('[data-mode="side"] small').textContent = `年代 × ${Y}`;
+  document.querySelector('[data-mode="top"] small').textContent = `${X} × 年代`;
+}
+function setAxes(xKey, yKey) {
+  if (xKey === yKey) return;
+  ui.xKey = xKey; ui.yKey = yKey;
+  buildWalls();
+  buildLabels();
+  for (const e of entries.values()) e.pos = worldPos(e.shoe);   // カードは新しい位置へ滑らかに移動
+  syncAxisUI();
+  writeYearToUrl();
+  tipFor = null;
+  onFilterChange();
+  updateModeUI();
+}
+// 同じ指標を選んだら、もう一方と入れ替える
+axX.addEventListener('change', () => setAxes(axX.value, axX.value === ui.yKey ? ui.xKey : ui.yKey));
+axY.addEventListener('change', () => setAxes(axY.value === ui.xKey ? ui.yKey : ui.xKey, axY.value));
+$('#axSwap').addEventListener('click', () => setAxes(ui.yKey, ui.xKey));
+
+/* ---------- シューズごとの表示／非表示 ---------- */
+function setShoeHidden(id, hide) {
+  if (hide) hiddenShoes.add(id); else hiddenShoes.delete(id);
+  writeYearToUrl();
+  onFilterChange();
+}
+$('#showAllShoes').addEventListener('click', () => {
+  for (const s of data.shoes.values()) if (passesFilters(s)) hiddenShoes.delete(s.id);
+  writeYearToUrl(); onFilterChange();
+});
+$('#hideAllShoes').addEventListener('click', () => {
+  for (const s of data.shoes.values()) if (passesFilters(s)) hiddenShoes.add(s.id);
+  writeYearToUrl(); onFilterChange();
+});
+
+// URL の ?x=weight&y=price で軸、?hide=s01,s05 で隠すシューズを指定して開ける
+(function readAxesFromUrl() {
+  const q = new URLSearchParams(location.search);
+  const x = q.get('x'), y = q.get('y');
+  if (METRIC_KEYS.includes(x) && METRIC_KEYS.includes(y) && x !== y) { ui.xKey = x; ui.yKey = y; }
+  (q.get('hide') || '').split(',').map((v) => v.trim()).filter((v) => v && v.length <= 200).forEach((id) => hiddenShoes.add(id));
+  syncAxisUI();
 })();
 
 let last = performance.now();
