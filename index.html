@@ -21,6 +21,7 @@
   --focus: #1d6fe0;
   --ok: #1f9d55;
   --warn: #c98a12;
+  --star: #d99a00;
   --axis-x: #e0452d;
   --axis-y: #1d6fe0;
   --axis-z: #7b4fe0;
@@ -101,6 +102,23 @@ button:disabled { cursor: default; }
 .topbar { position: absolute; left: 20px; top: 16px; right: 20px; pointer-events: none; }
 .topbar h1 { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.3; }
 .caption { margin: 2px 0 0; font-size: 13.5px; color: var(--ink-2); font-weight: 500; }
+.help-btn {
+  pointer-events: auto; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px 5px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+}
+.help-btn:hover { color: var(--ink); background: var(--surface-2); }
+.help-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+#helpDlg { width: min(640px, calc(100vw - 24px)); }
+.help { padding: 20px 22px 6px; display: grid; gap: 18px; overflow-y: auto; max-height: calc(100dvh - 120px); }
+.help h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.help h3 { margin: 0 0 6px; font-size: 13.5px; font-weight: 800; color: var(--ink); padding-bottom: 5px; border-bottom: 1px solid var(--line); }
+.help dl { margin: 0; display: grid; grid-template-columns: 172px 1fr; gap: 6px 14px; font-size: 13px; line-height: 1.6; }
+.help dt { font-weight: 700; color: var(--ink); }
+.help dd { margin: 0; color: var(--ink-2); }
+.help p { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+.help code { font-size: 12px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+@media (max-width: 560px) { .help dl { grid-template-columns: 1fr; gap: 0 0; } .help dd { margin-bottom: 8px; } }
 .hint { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-3); max-width: 560px; }
 .hint b { color: var(--ink-2); font-weight: 700; }
 
@@ -212,6 +230,20 @@ button:disabled { cursor: default; }
 .chip .n { font-family: var(--font-num); font-size: 14px; color: var(--ink-3); font-weight: 600; }
 .chip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
 .chip[aria-pressed="false"] { color: var(--ink-3); background: transparent; border-style: dashed; }
+.focus-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.search {
+  flex: 1 1 auto; min-width: 0; padding: 6px 10px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--stage); font-size: 13.5px; color: var(--ink);
+}
+.star-chip { flex: none; --c: var(--star); }
+.star-chip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.star-chip[aria-pressed="true"] { color: var(--ink); border-style: solid; }
+.star-chip[aria-pressed="true"] svg { fill: var(--star); stroke: var(--star); }
+.star { width: 32px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--ink-3); }
+.star:hover { background: var(--surface-2); color: var(--ink); }
+.star svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.star[aria-pressed="true"] { color: var(--star); border-color: var(--star); }
+.star[aria-pressed="true"] svg { fill: var(--star); }
 .chip[aria-pressed="false"] .dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
 
 .options { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
@@ -242,6 +274,8 @@ button:disabled { cursor: default; }
 .yr-range .link { margin-left: 4px; }
 .opt select { padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; }
 .opt input[type="range"] { width: 112px; accent-color: var(--ink); }
+.helper-pick { flex-basis: 100%; flex-wrap: wrap; gap: 6px 14px; }
+.helper-pick label { display: inline-flex; align-items: center; gap: 5px; }
 .opt input[type="checkbox"] { accent-color: var(--ink); width: 16px; height: 16px; margin: 0; }
 
 .cards { list-style: none; margin: 0; padding: 8px 10px 16px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
@@ -251,7 +285,8 @@ button:disabled { cursor: default; }
 .card-main:hover { background: var(--surface-2); }
 .card.is-selected .card-main { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--c); }
 .card .card-main { padding-right: 46px; }
-.card.can-edit .card-main { padding-right: 96px; }
+.card .card-main { padding-right: 82px; }
+.card.can-edit .card-main { padding-right: 132px; }
 .thumb { width: 76px; height: 60px; object-fit: contain; border-radius: 9px; background: #f1f3f5; border: 1px solid var(--line); display: block; }
 .meta { min-width: 0; }
 .meta .brand { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); font-weight: 500; min-width: 0; }
@@ -354,13 +389,16 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
 <body>
 <div class="app">
   <section class="stage-wrap" id="stageWrap" aria-label="ランニングシューズの3Dグラフ">
-    <div id="stage" tabindex="0" role="application" aria-label="3Dグラフ。矢印キーで回転、プラスとマイナスで拡大縮小、Escで選択解除"></div>
+    <div id="stage" tabindex="0" role="application" aria-label="3Dグラフ。矢印キーで回転、プラスとマイナスで拡大縮小、Escで選択解除。操作方法は左上のボタンから確認できます"></div>
     <div class="labels" id="labels" aria-hidden="true"></div>
 
     <div class="topbar">
       <h1>ランニングシューズ 3Dマップ</h1>
       <p class="caption" id="caption" aria-live="polite">3D ビュー</p>
-      <ul class="hint" id="hint"></ul>
+      <button type="button" class="help-btn" id="helpBtn" aria-haspopup="dialog">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M7.8 7.6a2.3 2.3 0 0 1 4.4.9c0 1.6-2.2 1.9-2.2 3.3M10 14.4v.1"/></svg>
+        操作方法
+      </button>
     </div>
 
     <div class="viewbar">
@@ -391,8 +429,8 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
       </div>
       <div class="seg-mini" role="group" aria-label="切り取る幅">
         <button type="button" data-w="1" aria-pressed="false">1年</button>
-        <button type="button" data-w="5" aria-pressed="true">5年</button>
-        <button type="button" data-w="10" aria-pressed="false">10年</button>
+        <button type="button" data-w="3" aria-pressed="true">3年</button>
+        <button type="button" data-w="5" aria-pressed="false">5年</button>
       </div>
       <button type="button" class="scrub-close" id="sliceOff" aria-label="切り取りをやめる">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>
@@ -429,6 +467,13 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
         <button type="button" class="link" id="allBtn">すべて表示</button>
       </div>
       <div class="chips" id="chips" role="group" aria-label="ブランド"></div>
+      <div class="focus-row">
+        <input type="search" id="shoeSearch" class="search" placeholder="モデル名・ブランドで探す" aria-label="シューズを検索" autocomplete="off">
+        <button type="button" class="chip star-chip" id="starOnly" aria-pressed="false" title="☆を付けたシューズだけをグラフと一覧に表示">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2L10 14.3l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg>
+          注目のみ <span class="n" id="starCount">0</span>
+        </button>
+      </div>
     </div>
 
     <div class="options">
@@ -461,7 +506,12 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
         </select>
       </label>
       <label class="opt">カードの大きさ <input type="range" id="sizeRange" min="0.8" max="2.8" step="0.05"></label>
-      <label class="opt"><input type="checkbox" id="helperChk" checked> 床への補助線</label>
+      <div class="opt helper-pick" role="group" aria-label="補助線">
+        <span>補助線</span>
+        <label title="横軸×年代の面へ"><input type="checkbox" data-plane="y" checked> 床</label>
+        <label title="横軸×縦軸の面へ"><input type="checkbox" data-plane="z"> 奥の壁</label>
+        <label title="年代×縦軸の面へ"><input type="checkbox" data-plane="x"> 横の壁</label>
+      </div>
     </div>
 
     <div class="list-tools">
@@ -517,7 +567,7 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
     </label>
     <label class="field"><span>反発 <output id="oReb">±0.0</output></span>
       <input type="range" id="fReb" min="-5" max="5" step="0.1" value="0">
-      <span class="ends"><span>低反発・安定</span><span>高反発</span></span>
+      <span class="ends"><span>低反発・安定</span><span>高反発・不安定</span></span>
     </label>
     <label class="field"><span>発売年</span><input type="number" id="fYear" step="1" inputmode="numeric"></label>
     <div class="field-row">
@@ -571,6 +621,81 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
   </div>
 </dialog>
 
+<dialog id="helpDlg" aria-labelledby="helpTitle">
+  <div class="help">
+    <h2 id="helpTitle">操作方法</h2>
+    <section>
+      <h3>グラフを動かす（マウス）</h3>
+      <dl>
+        <dt>ホイール</dt><dd>左右に回転</dd>
+        <dt>Shift＋ホイール</dt><dd>上下に傾ける（トラックパッドの横スクロールも同じ）</dd>
+        <dt>ホイールクリック</dt><dd>オートスクロール。クリックした位置からマウスを離した方向・距離に応じて回り続けます。もう一度クリックするか Esc で終了</dd>
+        <dt>ドラッグ</dt><dd>自由に回転</dd>
+        <dt>Ctrl＋ホイール</dt><dd>拡大・縮小（トラックパッドのピンチも同じ）</dd>
+        <dt>画像にカーソルを重ねる</dt><dd>シューズカードと、速さ・反発・重さ・価格・発売年の詳細を表示</dd>
+        <dt>画像をクリック</dt><dd>カードを表示したままにする（もう一度クリックで解除）</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>グラフを動かす（スマホ・タブレット）</h3>
+      <dl>
+        <dt>スワイプ</dt><dd>回転</dd>
+        <dt>ピンチ</dt><dd>拡大・縮小</dd>
+        <dt>画像をタップ</dt><dd>シューズカードと詳細を表示（もう一度タップで解除）</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>キーボード（グラフをクリックしたあと）</h3>
+      <dl>
+        <dt>← →</dt><dd>左右に回転</dd>
+        <dt>↑ ↓</dt><dd>上下に傾ける</dd>
+        <dt>＋ −</dt><dd>拡大・縮小</dd>
+        <dt>Esc</dt><dd>選択の解除、オートスクロールの終了</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>画面下のボタン</h3>
+      <dl>
+        <dt>3D</dt><dd>立体の表示に戻す</dd>
+        <dt>z = 0 ／ x = 0 ／ y = 0</dt><dd>その軸の方向からまっすぐ見た平面で表示。ボタンの下に、いま表示される2つの軸が出ます</dd>
+        <dt>年代で切り取る</dt><dd>選んだ年代のシューズだけを表示。スライダーで年、「1年／3年／5年」で幅、▶で1年ずつ自動再生、× で終了</dd>
+        <dt>− ＋</dt><dd>拡大・縮小</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>右側のパネル</h3>
+      <dl>
+        <dt>ブランドで絞り込み</dt><dd>クリックで表示・非表示を切り替え。ダブルクリックでそのブランドだけを表示。「すべて表示」で全ブランドに戻す</dd>
+        <dt>検索</dt><dd>モデル名・ブランド名で一覧を絞り込み（グラフはそのまま）</dd>
+        <dt>☆ ／ 注目のみ</dt><dd>一覧の☆で注目に追加。「注目のみ」を押すと、注目したシューズだけをグラフと一覧に表示</dd>
+        <dt>目のボタン</dt><dd>そのシューズをグラフから隠す・戻す。「すべて表示／すべて非表示」で一覧に出ているものをまとめて切り替え</dd>
+        <dt>横軸・縦軸</dt><dd>速さ・反発・重さ・価格から2つを選択（奥行きは年代で固定）。⇅ で入れ替え。データが空欄のシューズは、その軸ではグラフに出ません</dd>
+        <dt>年代の範囲</dt><dd>開始年・終了年を入力して Enter。「データに合わせる」で表示中のシューズに合わせ、「元に戻す」で 2015〜2030年に戻す</dd>
+        <dt>並べ替え</dt><dd>一覧の並び順を変更</dd>
+        <dt>カードの大きさ</dt><dd>グラフ上の画像とカードの大きさを変更</dd>
+        <dt>補助線</dt><dd>各シューズから床・奥の壁・横の壁へ垂線を引き、値を読み取りやすくする</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>表示をそのまま共有する</h3>
+      <p>軸、年代の範囲、切り取り、隠したシューズ、注目したシューズは、ページの URL に自動で入ります。いま見ている URL をそのまま送れば、相手も同じ状態で開けます。</p>
+    </section>
+    <section id="helpEdit" hidden>
+      <h3>編集モード（URL の末尾に <code>?edit</code>）</h3>
+      <dl>
+        <dt>カードを追加 ／ 編集</dt><dd>モデル名、ブランド、画像、速さ、反発、発売年、重さ、価格、メモを入力</dd>
+        <dt>ブランドを管理</dt><dd>ブランドの追加、名前と色の変更、カードのないブランドの削除</dd>
+        <dt>data.js を書き出す</dt><dd>変更をファイルにしてダウンロード。リポジトリの data.js と置き換えて push すると公開ページに反映</dd>
+        <dt>下書きを破棄</dt><dd>このブラウザの下書きを消して data.js の内容に戻す（反映を確認してから）</dd>
+      </dl>
+    </section>
+  </div>
+  <div class="dlg-actions">
+    <span class="spacer"></span>
+    <button type="button" class="btn primary" id="helpClose">閉じる</button>
+  </div>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -586,10 +711,10 @@ const CONFIG = {
   half: 5,
   axes: {
     speed:   { min: -5,   max: 5,    tick: 1 },   // X：遅い(-) ↔ 速い(+)
-    rebound: { min: -5,   max: 5,    tick: 1 },   // Y：低反発・安定(-) ↔ 高反発(+)
-    weight:  { min: 50,  max: 350,  tick: 25 },   // 軽い ↔ 重い（g）
+    rebound: { min: -5,   max: 5,    tick: 1 },   // 低反発・安定(-) ↔ 高反発・不安定(+)
+    weight:  { min: 150,  max: 350,  tick: 25 },   // 軽い ↔ 重い（g）
     price:   { min: 5000, max: 45000, tick: 5000 }, // 安価 ↔ 高価（円）
-    year:    { min: 1970, max: 2030, tick: 10 },  // Z：昔 ↔ 今（初期表示の範囲。画面の「年代の範囲」や URL の ?from=2010&to=2026 で変えられる）
+    year:    { min: 2015, max: 2030, tick: 5 },  // Z：昔 ↔ 今（初期表示の範囲。画面の「年代の範囲」や URL の ?from=2010&to=2026 で変えられる）
   },
   draftKey: 'shoe-atlas-3d:draft:v1',   // 編集モードの下書き（このブラウザだけ）
 };
@@ -597,7 +722,7 @@ const CONFIG = {
 const METRICS = {
   speed:   { label: '速さ', neg: '遅い', pos: '速い', bipolar: true, labelStep: 2,
              fmt: (v) => signed(v), tickFmt: (v) => signed(v).replace('.0', '') },
-  rebound: { label: '反発', neg: '低反発・安定', pos: '高反発', bipolar: true, labelStep: 2,
+  rebound: { label: '反発', neg: '低反発・安定', pos: '高反発・不安定', bipolar: true, labelStep: 2,
              fmt: (v) => signed(v), tickFmt: (v) => signed(v).replace('.0', '') },
   weight:  { label: '重さ', neg: '軽い', pos: '重い', unit: true, labelStep: 50,
              fmt: (v) => `${Math.round(v)}g`, tickFmt: (v) => `${v}g` },
@@ -655,13 +780,22 @@ const activeBrands = new Set();
 const seenBrands = new Set();
 const inYearRange = (s) => s.year >= CONFIG.axes.year.min && s.year <= CONFIG.axes.year.max;
 // 年代で切り取る：start 年から w 年分（start〜start+w-1）だけを表示する
-const slice = { on: false, start: 2017, w: 5, playing: false, timer: 0 };
+const slice = { on: false, start: 2017, w: 3, playing: false, timer: 0 };
 const sliceEnd = () => slice.start + slice.w - 1;
 const inSlice = (s) => !slice.on || (s.year >= slice.start && s.year <= sliceEnd());
 const hiddenShoes = new Set();   // 一覧の目のボタンでグラフから外したシューズ
 const hasValue = (s, key) => typeof s[key] === 'number' && Number.isFinite(s[key]);
 // 一覧に出す条件（ブランド・年代）と、グラフに出す条件（さらに非表示でなく、選んだ軸の値があること）
-const passesFilters = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId));
+const starred = new Set();   // ☆で選んだ「注目」のシューズ
+const passesFilters = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId))
+  && (!ui.onlyStarred || starred.has(s.id));
+// 検索は一覧だけを絞り込む（グラフはそのまま）
+const matchesQuery = (s) => {
+  const q = ui.query.trim().toLowerCase();
+  if (!q) return true;
+  return `${s.name} ${brandOf(s).name}`.toLowerCase().includes(q);
+};
+const inList = (s) => passesFilters(s) && matchesQuery(s);
 const isShown = (s) => passesFilters(s) && !hiddenShoes.has(s.id) && hasValue(s, ui.xKey) && hasValue(s, ui.yKey);
 
 // mode: loading（接続中）/ shared（共有データ）/ local（この端末だけ）/ unavailable（共有データに入れない）
@@ -672,8 +806,10 @@ const ui = {
   hoverId: null,
   listHoverId: null,
   cardSize: desktopMQ.matches ? 1.45 : 2.1,
-  helpers: true,
+  helpers: { y: true, z: false, x: false },   // 補助線：床 / 奥の壁 / 横の壁
   sort: 'year',
+  onlyStarred: false, // 注目のみ表示
+  query: '',          // 一覧の検索語
   xKey: 'speed',     // 横軸
   yKey: 'rebound',   // 縦軸
 };
@@ -831,53 +967,76 @@ function recolorAxes() {
   originMat.color.copy(colors.ink);
 }
 
-/* ---------- 床への補助線 ---------- */
+/* ---------- 補助線（床・奥の壁・横の壁へ） ---------- */
+// それぞれのシューズから、いま見えている奥側の壁へ垂線を引き、壁に印を付ける
 const helperRoot = new THREE.Group();
 scene.add(helperRoot);
+const AXES3 = ['x', 'y', 'z'];
+const AXIS_INDEX = { x: 0, y: 1, z: 2 };
 const dropMat = new THREE.LineDashedMaterial({ dashSize: 0.16, gapSize: 0.12, transparent: true, opacity: 0.9 });
-const markerGeo = new THREE.CircleGeometry(0.11, 24).rotateX(-Math.PI / 2);
+const markerGeos = {
+  x: new THREE.CircleGeometry(0.11, 24).rotateY(Math.PI / 2),
+  y: new THREE.CircleGeometry(0.11, 24).rotateX(-Math.PI / 2),
+  z: new THREE.CircleGeometry(0.11, 24),
+};
+const helperGroups = {};
+const helperLines = { x: null, y: null, z: null };
+const wallSign = { x: -1, y: -1, z: -1 };   // 補助線を引く先の壁（-1 なら -H 側）
+AXES3.forEach((a) => { helperGroups[a] = new THREE.Group(); helperRoot.add(helperGroups[a]); });
 const markerMats = new Map();
-let dropGeo = null;
 function markerMat(color) {
-  if (!markerMats.has(color)) markerMats.set(color, new THREE.MeshBasicMaterial({ color: new THREE.Color(color) }));
+  if (!markerMats.has(color)) markerMats.set(color, new THREE.MeshBasicMaterial({ color: new THREE.Color(color), side: THREE.DoubleSide }));
   return markerMats.get(color);
 }
-let dropLines = null;
 let helperItems = [];
 function rebuildHelpers() {
-  emptyGroup(helperRoot);
-  if (dropGeo) { dropGeo.dispose(); dropGeo = null; dropLines = null; }
+  for (const a of AXES3) {
+    emptyGroup(helperGroups[a]);
+    if (helperLines[a]) { helperLines[a].geometry.dispose(); helperLines[a] = null; }
+  }
   helperItems = [];
   for (const e of entries.values()) {
     if (!isShown(e.shoe)) continue;
-    const m = new THREE.Mesh(markerGeo, markerMat(brandOf(e.shoe).color));
-    helperRoot.add(m);
-    helperItems.push({ e, m });
+    const markers = {};
+    for (const a of AXES3) {
+      markers[a] = new THREE.Mesh(markerGeos[a], markerMat(brandOf(e.shoe).color));
+      helperGroups[a].add(markers[a]);
+    }
+    helperItems.push({ e, markers });
   }
   if (helperItems.length) {
-    dropGeo = new THREE.BufferGeometry();
-    dropGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(helperItems.length * 6), 3));
-    dropLines = new THREE.LineSegments(dropGeo, dropMat);
-    helperRoot.add(dropLines);
+    for (const a of AXES3) {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(helperItems.length * 6), 3));
+      helperLines[a] = new THREE.LineSegments(g, dropMat);
+      helperGroups[a].add(helperLines[a]);
+    }
   }
   updateHelperPositions();
   updateHelperVisibility();
 }
 function updateHelperPositions() {
-  if (!dropGeo) return;
-  const arr = dropGeo.attributes.position.array;
-  helperItems.forEach(({ e, m }, i) => {
-    const p = e.sprite.position;
-    arr[i * 6] = p.x; arr[i * 6 + 1] = p.y; arr[i * 6 + 2] = p.z;
-    arr[i * 6 + 3] = p.x; arr[i * 6 + 4] = -H; arr[i * 6 + 5] = p.z;
-    m.position.set(p.x, -H + 0.015, p.z);
-  });
-  dropGeo.attributes.position.needsUpdate = true;
-  dropGeo.computeBoundingSphere();
-  dropLines.computeLineDistances();
+  if (!helperItems.length) return;
+  for (const a of AXES3) {
+    const lines = helperLines[a];
+    if (!lines) continue;
+    const arr = lines.geometry.attributes.position.array;
+    const ai = AXIS_INDEX[a], wall = wallSign[a] * H;
+    helperItems.forEach(({ e, markers }, i) => {
+      const p = e.sprite.position;
+      const from = [p.x, p.y, p.z];
+      const to = from.slice(); to[ai] = wall;
+      arr.set(from, i * 6); arr.set(to, i * 6 + 3);
+      to[ai] = wall - wallSign[a] * 0.015;   // 壁の線に埋もれないよう少し手前に
+      markers[a].position.set(to[0], to[1], to[2]);
+    });
+    lines.geometry.attributes.position.needsUpdate = true;
+    lines.geometry.computeBoundingSphere();
+    lines.computeLineDistances();
+  }
 }
 function updateHelperVisibility() {
-  helperRoot.visible = ui.helpers && view.mode === '3d';
+  for (const a of AXES3) helperGroups[a].visible = !!ui.helpers[a];
   markDirty();
 }
 
@@ -1026,7 +1185,38 @@ const cardSig = (s) => { const b = brandOf(s); return [s.name, s.year, s.speed, 
 function paintEntry(e) {
   drawCard(e.canvas, e.shoe, e.img);
   e.tex.needsUpdate = true;
+  paintImage(e);
   markDirty();
+}
+// グラフ上にふだん出す「画像だけ」のテクスチャ。透明な余白は切り落として、靴の形にぴったり合わせる
+function paintImage(e) {
+  const img = e.img;
+  if (!img || !img.width || !img.height) return;
+  const s = Math.min(1, 512 / Math.max(img.width, img.height));
+  const w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s));
+  const src = document.createElement('canvas');
+  src.width = w; src.height = h;
+  const sg = src.getContext('2d');
+  sg.drawImage(img, 0, 0, w, h);
+  let x0 = 0, y0 = 0, x1 = w, y1 = h;
+  try {
+    const d = sg.getImageData(0, 0, w, h).data;
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (d[(y * w + x) * 4 + 3] > 10) { if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
+    }
+    if (maxX >= 0) { x0 = Math.max(0, minX - 4); y0 = Math.max(0, minY - 4); x1 = Math.min(w, maxX + 5); y1 = Math.min(h, maxY + 5); }
+  } catch (_) {}
+  const c = document.createElement('canvas');
+  c.width = x1 - x0; c.height = y1 - y0;
+  c.getContext('2d').drawImage(src, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+  const old = e.imgTex;
+  e.imgTex = new THREE.CanvasTexture(c);
+  e.imgTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  e.imgAspect = c.width / c.height;
+  if (e.sprite.material.map === old) e.sprite.material.map = e.imgTex;
+  if (old) old.dispose();
+  applySpriteState(e);
 }
 // index.html をダブルクリックで直接開くと、ブラウザの制限で画像を WebGL に渡せない。
 // 一度でも描くとカードのキャンバスが使えなくなるので、先に小さなキャンバスで確かめる。
@@ -1066,12 +1256,15 @@ function addEntry(shoe) {
   canvas.height = CARD.h * CARD.px;
   const tex = new THREE.CanvasTexture(canvas);
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.02 }));
+  const blank = document.createElement('canvas');
+  blank.width = blank.height = 2;
+  const imgTex = new THREE.CanvasTexture(blank);
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: imgTex, transparent: true, alphaTest: 0.02 }));
   const pos = worldPos(shoe);
   sprite.position.copy(pos);
   sprite.userData.id = shoe.id;
   shoeRoot.add(sprite);
-  const e = { shoe, sprite, canvas, tex, pos, img: null, sig: cardSig(shoe), loadingUrl: null };
+  const e = { shoe, sprite, canvas, tex, imgTex, imgAspect: 1.5, pos, img: null, sig: cardSig(shoe), loadingUrl: null };
   entries.set(shoe.id, e);
   paintEntry(e);
   loadEntryImage(e);
@@ -1080,7 +1273,7 @@ function removeEntry(id) {
   const e = entries.get(id);
   if (!e) return;
   shoeRoot.remove(e.sprite);
-  e.tex.dispose(); e.sprite.material.dispose();
+  e.tex.dispose(); if (e.imgTex) e.imgTex.dispose(); e.sprite.material.dispose();
   entries.delete(id);
 }
 function syncEntries() {
@@ -1099,23 +1292,26 @@ function syncEntries() {
   }
 }
 function redrawAllCards() { for (const e of entries.values()) paintEntry(e); }
-function applySpriteStates() {
+// ふだんは透過画像だけ。マウスを重ねた・選んだ・一覧で指しているときだけシューズカードに切り替える
+function applySpriteState(e) {
+  const id = e.shoe.id;
   const dimFocus = ui.selectedId || ui.listHoverId;
-  const w = ui.cardSize, h = w * CARD.h / CARD.w;
-  for (const e of entries.values()) {
-    const id = e.shoe.id;
-    const vis = isShown(e.shoe);
-    if (vis && !e.sprite.visible && !reduceMotion) e.appear = 0;   // 新しく現れたカードは小さい状態から広がる
-    e.sprite.visible = vis;
-    const lifted = id === ui.hoverId || id === ui.listHoverId || id === ui.selectedId;
-    const k = lifted ? 1.32 : 1;
-    e.baseW = w * k; e.baseH = h * k;
-    const a = e.appear == null ? 1 : 0.55 + 0.45 * (1 - Math.pow(1 - e.appear, 3));
-    e.sprite.scale.set(e.baseW * a, e.baseH * a, 1);
-    e.sprite.material.opacity = dimFocus && !lifted ? 0.3 : 1;
-    e.sprite.material.depthTest = !lifted;
-    e.sprite.renderOrder = lifted ? 10 : 0;
-  }
+  const vis = isShown(e.shoe);
+  if (vis && !e.sprite.visible && !reduceMotion) e.appear = 0;   // 新しく現れたものは小さい状態から広がる
+  e.sprite.visible = vis;
+  const lifted = id === ui.hoverId || id === ui.listHoverId || id === ui.selectedId;
+  const map = lifted ? e.tex : e.imgTex;
+  if (e.sprite.material.map !== map) e.sprite.material.map = map;
+  if (lifted) { e.baseW = ui.cardSize * 1.32; e.baseH = e.baseW * CARD.h / CARD.w; }
+  else { e.baseW = ui.cardSize * 1.2; e.baseH = e.baseW / (e.imgAspect || 1.5); }
+  const a = e.appear == null ? 1 : 0.55 + 0.45 * (1 - Math.pow(1 - e.appear, 3));
+  e.sprite.scale.set(e.baseW * a, e.baseH * a, 1);
+  e.sprite.material.opacity = dimFocus && !lifted ? 0.3 : 1;
+  e.sprite.material.depthTest = !lifted;
+  e.sprite.renderOrder = lifted ? 10 : 0;
+}
+function applySpriteStates() {
+  for (const e of entries.values()) applySpriteState(e);
   markDirty();
 }
 
@@ -1214,12 +1410,17 @@ function updateModeUI() {
   markDirty();
 }
 function updateWalls() {
+  let flipped = false;
   for (const axis of ['x', 'y', 'z']) {
     const d = camDir[axis];
     const [neg, pos] = walls[axis];
     neg.visible = d > 0.03;
     pos.visible = d < -0.03;
+    // 見えている壁が反対側に切り替わったら、補助線もそちらへ引き直す
+    const want = d > 0.03 ? -1 : d < -0.03 ? 1 : wallSign[axis];
+    if (want !== wallSign[axis]) { wallSign[axis] = want; flipped = true; }
   }
+  if (flipped) updateHelperPositions();
 }
 
 /* =====================================================================
@@ -1570,6 +1771,15 @@ function cardEl(s) {
     ed.addEventListener('click', () => openCard(s.id));
     actions.appendChild(ed);
   }
+  const star = document.createElement('button');
+  const isStar = starred.has(s.id);
+  star.type = 'button'; star.className = 'star';
+  star.setAttribute('aria-pressed', String(isStar));
+  star.setAttribute('aria-label', isStar ? `${s.name} の注目を外す` : `${s.name} を注目に追加`);
+  star.title = isStar ? '注目を外す' : '注目に追加';
+  star.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2L10 14.3l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg>';
+  star.addEventListener('click', () => setStarred(s.id, !starred.has(s.id)));
+  actions.appendChild(star);
   const eye = document.createElement('button');
   eye.type = 'button'; eye.className = 'eye';
   eye.setAttribute('aria-pressed', String(!off));
@@ -1585,12 +1795,14 @@ function cardEl(s) {
 }
 function renderCards() {
   cardList.textContent = '';
-  const list = [...data.shoes.values()].filter(passesFilters).sort(SORTERS[ui.sort]);
+  const list = [...data.shoes.values()].filter(inList).sort(SORTERS[ui.sort]);
   const onGraph = [...data.shoes.values()].filter(isShown).length;
   if (store.loaded) countEl.innerHTML = `<b>${onGraph}</b> / ${data.shoes.size} 足をグラフに表示中`;
   else countEl.textContent = '';
   if (store.loaded && data.shoes.size && !list.length) {
-    emptyEl.textContent = '表示できるカードがありません。ブランドの絞り込みか、年代の範囲を変えてください。';
+    emptyEl.textContent = ui.onlyStarred && !starred.size ? '注目のシューズがまだありません。「注目のみ」を外して、一覧の☆で選んでください。'
+      : ui.query.trim() ? `「${ui.query.trim()}」に当てはまるシューズがありません。`
+      : '表示できるカードがありません。ブランドの絞り込みか、年代の範囲を変えてください。';
     emptyEl.hidden = false;
   } else if (store.loaded && !data.shoes.size) {
     emptyEl.textContent = store.canWrite ? 'まだカードがありません。「カードを追加」から登録できます。' : 'まだカードが登録されていません。';
@@ -1620,7 +1832,9 @@ $('#sortSel').addEventListener('change', (e) => { ui.sort = e.target.value; rend
 const sizeRange = $('#sizeRange');
 sizeRange.value = ui.cardSize;
 sizeRange.addEventListener('input', () => { ui.cardSize = +sizeRange.value; applySpriteStates(); });
-$('#helperChk').addEventListener('change', (e) => { ui.helpers = e.target.checked; updateHelperVisibility(); });
+document.querySelectorAll('.helper-pick input[data-plane]').forEach((el) => {
+  el.addEventListener('change', () => { ui.helpers[el.dataset.plane] = el.checked; updateHelperVisibility(); });
+});
 
 /* ---------- データ反映 ---------- */
 const fontsReady = (async () => {
@@ -1684,7 +1898,8 @@ function updateStageMessage() {
   } else if (store.loaded) {
     // 選んだ軸の値がそろっていないせいでグラフが空になっている場合だけ知らせる
     const list = [...data.shoes.values()].filter((x) => passesFilters(x) && !hiddenShoes.has(x.id));
-    if (list.length && !list.some(isShown)) {
+    if (ui.onlyStarred && !starred.size) msg = '注目のシューズがまだありません。一覧の☆で選ぶと、ここに表示されます。';
+    else if (list.length && !list.some(isShown)) {
       const keys = [ui.xKey, ui.yKey].filter((k) => list.every((x) => !hasValue(x, k)));
       if (keys.length) msg = `${keys.map((k) => METRICS[k].label).join('・')}のデータがまだ入っていないため、この軸の組み合わせでは表示できるシューズがありません。`;
     }
@@ -1752,7 +1967,7 @@ function exportDataJs() {
   return [
     '// ランニングシューズ 3Dマップのデータ',
     '// speed:   -5（遅い）〜 +5（速い）',
-    '// rebound: -5（低反発・安定）〜 +5（高反発）',
+    '// rebound: -5（低反発・安定）〜 +5（高反発・不安定）',
     '// weight:  重さ（g）。未入力なら null',
     '// price:   価格（円）。未入力なら null',
     '// year:    発売年',
@@ -2258,18 +2473,14 @@ function toast(msg) {
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
 }
 
-(function renderHint() {
-  const items = coarsePointer
-    ? [['スワイプ', '回転'], ['ピンチ', '拡大縮小'], ['タップ', '詳細']]
-    : [['ホイール', '回転'], ['Shift＋ホイール', '傾き'], ['ホイールクリック', 'オートスクロール'], ['ドラッグ', '自由回転'], ['Ctrl＋ホイール', '拡大縮小']];
-  const ul = $('#hint');
-  items.forEach(([k, v]) => {
-    const li = document.createElement('li');
-    const b = document.createElement('b'); b.textContent = k;
-    li.append(b, `：${v}`);
-    ul.appendChild(li);
-  });
-})();
+/* ---------- 操作方法 ---------- */
+const helpDlg = $('#helpDlg');
+$('#helpBtn').addEventListener('click', () => {
+  $('#helpEdit').hidden = !(store.mode === 'static' ? editMode : store.canWrite);
+  helpDlg.showModal();
+});
+$('#helpClose').addEventListener('click', () => helpDlg.close());
+helpDlg.addEventListener('click', (e) => { if (e.target === helpDlg) helpDlg.close(); });
 
 /* =====================================================================
    13. テーマ・リサイズ・描画ループ・起動
@@ -2376,6 +2587,10 @@ function writeYearToUrl() {
     else { u.searchParams.delete('x'); u.searchParams.delete('y'); }
     if (hiddenShoes.size) u.searchParams.set('hide', [...hiddenShoes].join(','));
     else u.searchParams.delete('hide');
+    if (starred.size) u.searchParams.set('star', [...starred].join(','));
+    else u.searchParams.delete('star');
+    if (ui.onlyStarred) u.searchParams.set('only', '1');
+    else u.searchParams.delete('only');
     history.replaceState(null, '', u.toString());
   } catch (_) {}
 }
@@ -2482,7 +2697,7 @@ sl.widths.forEach((b) => b.addEventListener('click', () => {
 (function readSliceFromUrl() {
   const q = new URLSearchParams(location.search);
   const st = parseInt(q.get('slice'), 10), w = parseInt(q.get('w'), 10);
-  if ([1, 5, 10].includes(w)) slice.w = w;
+  if ([1, 3, 5].includes(w)) slice.w = w;
   if (Number.isFinite(st)) {
     slice.start = st;
     slice.on = true;
@@ -2543,21 +2758,41 @@ function setShoeHidden(id, hide) {
   onFilterChange();
 }
 $('#showAllShoes').addEventListener('click', () => {
-  for (const s of data.shoes.values()) if (passesFilters(s)) hiddenShoes.delete(s.id);
+  for (const s of data.shoes.values()) if (inList(s)) hiddenShoes.delete(s.id);
   writeYearToUrl(); onFilterChange();
 });
 $('#hideAllShoes').addEventListener('click', () => {
-  for (const s of data.shoes.values()) if (passesFilters(s)) hiddenShoes.add(s.id);
+  for (const s of data.shoes.values()) if (inList(s)) hiddenShoes.add(s.id);
   writeYearToUrl(); onFilterChange();
 });
+
+/* ---------- 注目のシューズ・検索 ---------- */
+const starOnlyBtn = $('#starOnly'), starCountEl = $('#starCount'), searchEl = $('#shoeSearch');
+function syncStarUI() {
+  starOnlyBtn.setAttribute('aria-pressed', String(ui.onlyStarred));
+  starCountEl.textContent = starred.size;
+}
+function setStarred(id, on) {
+  if (on) starred.add(id); else starred.delete(id);
+  syncStarUI(); writeYearToUrl(); onFilterChange();
+}
+starOnlyBtn.addEventListener('click', () => {
+  ui.onlyStarred = !ui.onlyStarred;
+  syncStarUI(); writeYearToUrl(); onFilterChange();
+});
+searchEl.addEventListener('input', () => { ui.query = searchEl.value; renderCards(); });
 
 // URL の ?x=weight&y=price で軸、?hide=s01,s05 で隠すシューズを指定して開ける
 (function readAxesFromUrl() {
   const q = new URLSearchParams(location.search);
   const x = q.get('x'), y = q.get('y');
   if (METRIC_KEYS.includes(x) && METRIC_KEYS.includes(y) && x !== y) { ui.xKey = x; ui.yKey = y; }
-  (q.get('hide') || '').split(',').map((v) => v.trim()).filter((v) => v && v.length <= 200).forEach((id) => hiddenShoes.add(id));
+  const ids = (name) => (q.get(name) || '').split(',').map((v) => v.trim()).filter((v) => v && v.length <= 200);
+  ids('hide').forEach((id) => hiddenShoes.add(id));
+  ids('star').forEach((id) => starred.add(id));
+  ui.onlyStarred = q.get('only') === '1';
   syncAxisUI();
+  syncStarUI();
 })();
 
 let last = performance.now();
