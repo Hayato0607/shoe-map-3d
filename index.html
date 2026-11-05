@@ -9,53 +9,38 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=M+PLUS+1:wght@400;500;700;800&display=swap">
 <style>
 :root {
-  color-scheme: light;
-  --bg: #e9edf1;
-  --stage: #f5f7f9;
-  --surface: #ffffff;
-  --surface-2: #eef1f4;
-  --ink: #14181d;
-  --ink-2: #4c5662;
-  --ink-3: #848e99;
-  --line: #d3d9e0;
-  --focus: #1d6fe0;
-  --ok: #1f9d55;
-  --warn: #c98a12;
-  --star: #d99a00;
-  --axis-x: #e0452d;
-  --axis-y: #1d6fe0;
-  --axis-z: #7b4fe0;
-  --grid: #dbe0e6;
-  --grid-strong: #a9b3be;
-  --wall: #e8ecf0;
-  --drop: #9aa4af;
-  --shadow: rgba(15, 20, 26, 0.22);
+  color-scheme: dark;
+  --bg: #161616;
+  --stage: #1d1d1d;
+  --surface: #262626;
+  --surface-2: #313131;
+  --inset: #1f1f1f;
+  --ink: #f3f3f3;
+  --ink-2: #b4b4b4;
+  --ink-3: #7c7c7c;
+  --line: #3b3b3b;
+  --accent: #ff6a1a;
+  --accent-ink: #1b1b1b;
+  --accent-soft: rgba(255, 106, 26, 0.14);
+  --accent-line: rgba(255, 106, 26, 0.42);
+  --focus: #ff6a1a;
+  --ok: #3ccf7d;
+  --warn: #ffb547;
+  --star: #ffb020;
+  --axis-x: #ff5b45;
+  --axis-y: #4f8fff;
+  --axis-z: #a57cff;
+  --grid: #2c2c2c;
+  --grid-strong: #4d4d4d;
+  --wall: #222222;
+  --drop: #5a5a5a;
+  --shadow: rgba(0, 0, 0, 0.6);
   --font-ui: "M PLUS 1", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", system-ui, sans-serif;
   --font-num: "Barlow Condensed", "M PLUS 1", "Arial Narrow", system-ui, sans-serif;
-  --panel-w: 368px;
+  --panel-w: 380px;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #0e1115; --stage: #13171c; --surface: #1a1f25; --surface-2: #232a32;
-    --ink: #e9edf2; --ink-2: #aab3be; --ink-3: #6f7a86; --line: #2c343d; --focus: #6aa3ff;
-    --ok: #3ccf7d; --warn: #e8b54a;
-    --axis-x: #ff6b4f; --axis-y: #5c97ff; --axis-z: #a585ff;
-    --grid: #232a32; --grid-strong: #46515d; --wall: #171c22; --drop: #56616d;
-    --shadow: rgba(0, 0, 0, 0.55);
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #0e1115; --stage: #13171c; --surface: #1a1f25; --surface-2: #232a32;
-  --ink: #e9edf2; --ink-2: #aab3be; --ink-3: #6f7a86; --line: #2c343d; --focus: #6aa3ff;
-  --ok: #3ccf7d; --warn: #e8b54a;
-  --axis-x: #ff6b4f; --axis-y: #5c97ff; --axis-z: #a585ff;
-  --grid: #232a32; --grid-strong: #46515d; --wall: #171c22; --drop: #56616d;
-  --shadow: rgba(0, 0, 0, 0.55);
 }
 *, *::before, *::after { box-sizing: inherit; }
 [hidden] { display: none !important; }
@@ -266,6 +251,38 @@ button:disabled { cursor: default; }
 .card .miss { color: var(--warn); font-size: 11px; font-weight: 600; text-align: right; white-space: nowrap; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .field-hint { margin: -6px 0 0; }
+.filters .row .links { display: flex; gap: 14px; white-space: nowrap; }
+.ranges { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.range-grid { display: grid; gap: 14px; margin-top: 10px; }
+.rrow-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rlabel { font-size: 13px; font-weight: 700; color: var(--ink); }
+.rval { font-family: var(--font-num); font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-3); white-space: nowrap; }
+.rval.is-set { color: var(--accent); }
+.dual { position: relative; height: 26px; margin: 2px 4px 0; }
+.dual .track, .dual .fill { position: absolute; top: 50%; height: 4px; margin-top: -2px; border-radius: 2px; pointer-events: none; }
+.dual .track { left: 0; right: 0; background: var(--line); }
+.dual .fill { background: var(--accent); }
+.dual.full .fill { background: #5c5c5c; }
+.dual input[type="range"] {
+  position: absolute; left: -4px; right: -4px; top: 0; width: calc(100% + 8px); height: 26px; margin: 0;
+  background: transparent; -webkit-appearance: none; appearance: none; pointer-events: none; z-index: 2;
+}
+.dual input[type="range"]::-webkit-slider-runnable-track { background: transparent; height: 26px; }
+.dual input[type="range"]::-moz-range-track { background: transparent; }
+.dual input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; pointer-events: auto; cursor: grab;
+  width: 18px; height: 18px; margin-top: 4px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--accent); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.dual input[type="range"]::-moz-range-thumb {
+  pointer-events: auto; cursor: grab; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--accent); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.dual input[type="range"]:active::-webkit-slider-thumb { cursor: grabbing; background: var(--accent); }
+.dual input[type="range"]:focus-visible { outline: none; }
+.dual input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--ink); outline-offset: 2px; }
+.dual input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--ink); outline-offset: 2px; }
+.rends { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); margin-top: -2px; }
 .yr-range { flex-basis: 100%; flex-wrap: wrap; gap: 6px 8px; }
 .yr-range .yr {
   width: 74px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
@@ -356,11 +373,54 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* ---------- ダーク＋オレンジのテーマ ---------- */
+body { background: radial-gradient(120% 80% at 70% 0%, #1f1f1f 0%, var(--bg) 60%); }
+.app { gap: 14px; padding: 14px; }
+.stage-wrap { border: 1px solid var(--accent-line); border-radius: 14px; background: var(--stage); }
+.panel { border: 1px solid var(--accent-line); border-radius: 14px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #444 transparent; }
+.cards { flex: none; overflow: visible; }
+.topbar h1 { color: var(--accent); font-size: 21px; letter-spacing: 0.04em; }
+.panel-head { border-bottom: 0; padding: 20px 18px 12px; }
+.panel-title h2 { color: var(--accent); font-size: 19px; letter-spacing: 0.04em; }
+.count b { color: var(--accent); }
+.filters, .options {
+  margin: 0 14px 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--inset);
+}
+.filters .sub, .ranges .sub { color: var(--ink); font-weight: 700; font-size: 13px; }
+.ranges { border-top-color: var(--line); }
+.list-tools { padding: 6px 18px 2px; }
+.link { color: var(--accent); }
+.link:disabled { color: var(--ink-3); }
+.btn { background: var(--surface-2); border-color: var(--line); }
+.btn.primary, .btn.primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.seg, .scrubber, .tip, .stage-msg .box { background: var(--surface); border-color: var(--accent-line); }
+.seg-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg-btn[aria-pressed="true"] small { opacity: 0.85; }
+.play { background: var(--accent); color: var(--accent-ink); }
+.help-btn { background: var(--surface); border-color: var(--accent-line); color: var(--ink); }
+.help-btn:hover { background: var(--accent-soft); }
+.chip { background: var(--surface); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); }
+.status .role { border-color: var(--accent-line); color: var(--accent); background: var(--accent-soft); }
+.search, .yr-range .yr, .opt select, .card-edit { background: var(--surface); border-color: var(--line); }
+.opt input[type="range"], .opt input[type="checkbox"], .field input[type="range"], #sliceRange { accent-color: var(--accent); }
+.card-main { border: 1px solid transparent; }
+.card-main:hover { background: var(--surface-2); border-color: var(--line); }
+.card.is-selected .card-main { background: var(--accent-soft); border-color: var(--accent-line); box-shadow: inset 3px 0 0 var(--accent); }
+.thumb { background: #ffffff; border-color: var(--line); }
+.meta .name { color: var(--ink); }
+.foot { border-top-color: var(--line); }
+.toast { background: var(--accent); color: var(--accent-ink); }
+dialog { border: 1px solid var(--accent-line); }
+.dlg-body h2, .help h2 { color: var(--accent); }
+.help h3 { border-bottom-color: var(--line); }
+
 /* ---------- narrow screens ---------- */
 @media (max-width: 860px) {
   html, body { height: auto; }
   .app { grid-template-columns: 1fr; height: auto; }
-  .stage-wrap { height: 68vh; height: 68svh; min-height: 400px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .app { gap: 10px; padding: 10px; }
+  .stage-wrap { height: 68vh; height: 68svh; min-height: 400px; }
   .topbar { left: 14px; top: 12px; right: 14px; }
   .topbar h1 { font-size: 16px; }
   .caption { font-size: 12.5px; }
@@ -463,10 +523,17 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
 
     <div class="filters">
       <div class="row">
-        <span class="sub">ブランドで絞り込み</span>
-        <button type="button" class="link" id="allBtn">すべて表示</button>
+        <span class="sub">メーカーを選択</span>
+        <span class="links"><button type="button" class="link" id="allBtn">すべて表示</button> <button type="button" class="link" id="noneBtn">選択を解除</button></span>
       </div>
       <div class="chips" id="chips" role="group" aria-label="ブランド"></div>
+      <div class="ranges" role="group" aria-label="数値の範囲で絞り込み">
+        <div class="row">
+          <span class="sub">範囲で絞り込み</span>
+          <button type="button" class="link" id="rangeClear" disabled>条件をクリア</button>
+        </div>
+        <div class="range-grid" id="rangeGrid"></div>
+      </div>
       <div class="focus-row">
         <input type="search" id="shoeSearch" class="search" placeholder="モデル名・ブランドで探す" aria-label="シューズを検索" autocomplete="off">
         <button type="button" class="chip star-chip" id="starOnly" aria-pressed="false" title="☆を付けたシューズだけをグラフと一覧に表示">
@@ -700,6 +767,7 @@ input[type="color"] { width: 44px; height: 40px; padding: 3px; border-radius: 10
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="data.js"></script>
+<script src="images.js"></script>  <!-- 画像の対応表（tools/link_images.py で生成。なくても動く） -->
 <script>
 (() => {
 'use strict';
@@ -751,7 +819,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarsePointer = matchMedia('(pointer: coarse)').matches;
 const desktopMQ = matchMedia('(min-width: 861px)');
 // data.js の image に書ける値：images/xxx.webp のような相対パスか https:// の URL
-const isSafePath = (v) => typeof v === 'string' && v.length <= 300 && (/^https:\/\/[^\s"'<>]+$/.test(v) || /^[\w\-./%~]+$/.test(v)) && !v.startsWith('//');
+const isSafePath = (v) => typeof v === 'string' && v.length <= 1000 && (/^https:\/\/[^\s"'<>]+$/.test(v) || /^[\w\-./%~]+$/.test(v)) && !v.startsWith('//');
 const isColor = (c) => typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c);
 
 function hashColor(s) {
@@ -787,8 +855,13 @@ const hiddenShoes = new Set();   // 一覧の目のボタンでグラフから�
 const hasValue = (s, key) => typeof s[key] === 'number' && Number.isFinite(s[key]);
 // 一覧に出す条件（ブランド・年代）と、グラフに出す条件（さらに非表示でなく、選んだ軸の値があること）
 const starred = new Set();   // ☆で選んだ「注目」のシューズ
+// 速さ・反発・重さ・価格の範囲（null は指定なし）。範囲を指定した項目が空欄のシューズは外す
+const ranges = { speed: { min: null, max: null }, rebound: { min: null, max: null }, weight: { min: null, max: null }, price: { min: null, max: null } };
+const rangeActive = () => Object.values(ranges).some((r) => r.min != null || r.max != null);
+const inRanges = (s) => Object.entries(ranges).every(([k, r]) => (r.min == null && r.max == null)
+  || (hasValue(s, k) && (r.min == null || s[k] >= r.min) && (r.max == null || s[k] <= r.max)));
 const passesFilters = (s) => inYearRange(s) && inSlice(s) && (!data.brands.has(s.brandId) || activeBrands.has(s.brandId))
-  && (!ui.onlyStarred || starred.has(s.id));
+  && inRanges(s) && (!ui.onlyStarred || starred.has(s.id));
 // 検索は一覧だけを絞り込む（グラフはそのまま）
 const matchesQuery = (s) => {
   const q = ui.query.trim().toLowerCase();
@@ -1157,12 +1230,12 @@ function drawCard(canvas, shoe, img) {
   g.setTransform(CARD.px, 0, 0, CARD.px, 0, 0);
   g.clearRect(0, 0, CARD.w, CARD.h);
   roundRectPath(g, 3, 3, CARD.w - 6, CARD.h - 6, 24);
-  g.fillStyle = '#ffffff'; g.fill();
-  g.lineWidth = 6; g.strokeStyle = brand.color; g.stroke();
+  g.fillStyle = '#262626'; g.fill();
+  g.lineWidth = 4; g.strokeStyle = '#ff6a1a'; g.stroke();
   const ix = 17, iy = 17, iw = CARD.w - 34, ih = 190;
   g.save();
   roundRectPath(g, ix, iy, iw, ih, 14); g.clip();
-  g.fillStyle = '#f1f3f5'; g.fillRect(ix, iy, iw, ih);
+  g.fillStyle = '#ffffff'; g.fillRect(ix, iy, iw, ih);
   if (img && img.width && img.height) {
     const s = Math.min(iw / img.width, ih / img.height) * 0.94;
     const dw = img.width * s, dh = img.height * s;
@@ -1170,9 +1243,9 @@ function drawCard(canvas, shoe, img) {
   }
   g.restore();
   g.textBaseline = 'alphabetic';
-  g.fillStyle = brand.color; g.font = `700 21px ${FONT_NUM}`;
+  g.fillStyle = '#b4b4b4'; g.font = `700 21px ${FONT_NUM}`;
   g.fillText(fitText(g, brand.name, iw), ix + 2, iy + ih + 30);
-  g.fillStyle = '#14181d'; g.font = `700 26px ${FONT_NUM}`;
+  g.fillStyle = '#f3f3f3'; g.font = `700 26px ${FONT_NUM}`;
   wrapLines(g, shoe.name, iw - 2, 2).forEach((l, i) => g.fillText(l, ix + 2, iy + ih + 58 + i * 27));
 }
 
@@ -1180,7 +1253,14 @@ function drawCard(canvas, shoe, img) {
 const shoeRoot = new THREE.Group();
 scene.add(shoeRoot);
 const entries = new Map();
-const cardSig = (s) => { const b = brandOf(s); return [s.name, s.year, s.speed, s.rebound, s.weight, s.price, imageURL(s), b.name, b.color].join('\u0001'); };
+const cardSig = (s) => { const b = brandOf(s); return [s.name, s.year, s.speed, s.rebound, s.weight, s.price, ownImageURL(s) || '', b.name, b.color].join('\u0001'); };
+// 軽くするため、カードの描画と画像の読み込みは、はじめてグラフに出るときまで待つ
+function ensureReady(e) {
+  if (e.ready) return;
+  e.ready = true;
+  paintEntry(e);
+  loadEntryImage(e);
+}
 
 function paintEntry(e) {
   drawCard(e.canvas, e.shoe, e.img);
@@ -1264,10 +1344,9 @@ function addEntry(shoe) {
   sprite.position.copy(pos);
   sprite.userData.id = shoe.id;
   shoeRoot.add(sprite);
-  const e = { shoe, sprite, canvas, tex, imgTex, imgAspect: 1.5, pos, img: null, sig: cardSig(shoe), loadingUrl: null };
+  sprite.visible = false;
+  const e = { shoe, sprite, canvas, tex, imgTex, imgAspect: 1.5, pos, img: null, sig: cardSig(shoe), loadingUrl: null, ready: false };
   entries.set(shoe.id, e);
-  paintEntry(e);
-  loadEntryImage(e);
 }
 function removeEntry(id) {
   const e = entries.get(id);
@@ -1281,6 +1360,7 @@ function syncEntries() {
   for (const s of data.shoes.values()) {
     const e = entries.get(s.id);
     if (!e) { addEntry(s); continue; }
+    if (!e.ready) { e.shoe = s; e.sig = cardSig(s); e.pos = worldPos(s); e.sprite.position.copy(e.pos); continue; }
     const sig = cardSig(s);
     const urlChanged = imageURL(s) !== imageURL(e.shoe) || imageURL(s) !== e.loadingUrl;
     e.shoe = s;
@@ -1291,12 +1371,13 @@ function syncEntries() {
     if (urlChanged) { e.img = null; paintEntry(e); loadEntryImage(e); } else paintEntry(e);
   }
 }
-function redrawAllCards() { for (const e of entries.values()) paintEntry(e); }
+function redrawAllCards() { for (const e of entries.values()) if (e.ready) paintEntry(e); }
 // ふだんは透過画像だけ。マウスを重ねた・選んだ・一覧で指しているときだけシューズカードに切り替える
 function applySpriteState(e) {
   const id = e.shoe.id;
   const dimFocus = ui.selectedId || ui.listHoverId;
   const vis = isShown(e.shoe);
+  if (vis) ensureReady(e);
   if (vis && !e.sprite.visible && !reduceMotion) e.appear = 0;   // 新しく現れたものは小さい状態から広がる
   e.sprite.visible = vis;
   const lifted = id === ui.hoverId || id === ui.listHoverId || id === ui.selectedId;
@@ -1691,6 +1772,7 @@ function renderFilters() {
 function syncChips() {
   chipsEl.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(activeBrands.has(c.dataset.brand))));
   allBtn.disabled = [...data.brands.keys()].every((id) => activeBrands.has(id));
+  noneBtn.disabled = !activeBrands.size;
 }
 function onFilterChange() {
   const sel = ui.selectedId && data.shoes.get(ui.selectedId);
@@ -1703,6 +1785,89 @@ function onFilterChange() {
   updateStageMessage();
 }
 allBtn.addEventListener('click', () => { for (const id of data.brands.keys()) activeBrands.add(id); onFilterChange(); });
+const noneBtn = $('#noneBtn');
+noneBtn.addEventListener('click', () => { activeBrands.clear(); onFilterChange(); });
+
+/* ---------- 速さ・反発・重さ・価格の範囲（両端をつまんで動かすスライダー） ---------- */
+// 端いっぱいのときは「指定なし」（その項目が空欄のシューズも外さない）
+const RANGE_UI = {
+  speed:   { label: '速さ',      ends: ['遅い', '速い'],       step: 0.1, fmt: (v) => signed(v) },
+  rebound: { label: '反発/安定', ends: ['安定', '高反発'],     step: 0.1, fmt: (v) => signed(v) },
+  weight:  { label: '重さ',      ends: ['軽い', '重い'],       step: 5,   fmt: (v) => `${Math.round(v)}g` },
+  price:   { label: '価格',      ends: ['安い', '高い'],       step: 500, fmt: (v) => `${Math.round(v).toLocaleString('ja-JP')}円` },
+};
+const rangeGrid = $('#rangeGrid'), rangeClearBtn = $('#rangeClear');
+const sliders = {};
+let rangeTimer = 0;
+function paintSlider(k) {
+  const sl = sliders[k], u = RANGE_UI[k];
+  const lo = +sl.lo.value, hi = +sl.hi.value, a = +sl.lo.min, b = +sl.lo.max;
+  const pct = (v) => (b > a ? ((v - a) / (b - a)) * 100 : 0);
+  sl.fill.style.left = pct(lo) + '%';
+  sl.fill.style.right = (100 - pct(hi)) + '%';
+  const set = ranges[k].min != null || ranges[k].max != null;
+  sl.val.textContent = set ? `${u.fmt(lo)} 〜 ${u.fmt(hi)}` : 'すべて';
+  sl.val.classList.toggle('is-set', set);
+  sl.wrap.classList.toggle('full', !set);
+  // 両方のつまみが右端に寄ったとき、左のつまみをつかめるように前に出す
+  sl.lo.style.zIndex = lo >= b - (b - a) * 0.05 ? 3 : 2;
+}
+for (const k of METRIC_KEYS) {
+  const u = RANGE_UI[k];
+  const row = document.createElement('div'); row.className = 'rrow';
+  const head = document.createElement('div'); head.className = 'rrow-head';
+  const lab = document.createElement('span'); lab.className = 'rlabel'; lab.textContent = u.label;
+  const val = document.createElement('span'); val.className = 'rval'; val.setAttribute('aria-live', 'polite');
+  head.append(lab, val);
+  const wrap = document.createElement('div'); wrap.className = 'dual full';
+  const track = document.createElement('div'); track.className = 'track';
+  const fill = document.createElement('div'); fill.className = 'fill';
+  const mk = (side) => {
+    const el = document.createElement('input');
+    el.type = 'range'; el.step = String(u.step);
+    el.setAttribute('aria-label', `${u.label}の${side === 'min' ? '下限' : '上限'}`);
+    el.addEventListener('input', () => {
+      const sl = sliders[k];
+      // 下限が上限を追い越さないようにする
+      if (+sl.lo.value > +sl.hi.value) { if (side === 'min') sl.lo.value = sl.hi.value; else sl.hi.value = sl.lo.value; }
+      const a = +sl.lo.min, b = +sl.lo.max, eps = u.step / 2;
+      ranges[k].min = +sl.lo.value <= a + eps ? null : +sl.lo.value;
+      ranges[k].max = +sl.hi.value >= b - eps ? null : +sl.hi.value;
+      paintSlider(k);
+      rangeClearBtn.disabled = !rangeActive();
+      clearTimeout(rangeTimer);
+      rangeTimer = setTimeout(onFilterChange, 90);
+    });
+    return el;
+  };
+  const lo = mk('min'), hi = mk('max');
+  wrap.append(track, fill, lo, hi);
+  const ends = document.createElement('div'); ends.className = 'rends';
+  ends.innerHTML = `<span>${u.ends[0]}</span><span>${u.ends[1]}</span>`;
+  row.append(head, wrap, ends);
+  rangeGrid.appendChild(row);
+  sliders[k] = { lo, hi, fill, val, wrap };
+}
+// スライダーの両端を、データの最小・最大に合わせる
+function updateRangeBounds() {
+  for (const k of METRIC_KEYS) {
+    const u = RANGE_UI[k], sl = sliders[k];
+    const vals = [...data.shoes.values()].filter((s) => hasValue(s, k)).map((s) => s[k]);
+    const a = vals.length ? Math.floor(Math.min(...vals) / u.step) * u.step : 0;
+    const b = vals.length ? Math.max(a + u.step, Math.ceil(Math.max(...vals) / u.step) * u.step) : u.step;
+    const r = (v) => +v.toFixed(4);
+    for (const el of [sl.lo, sl.hi]) { el.min = r(a); el.max = r(b); }
+    sl.lo.value = ranges[k].min == null ? r(a) : clamp(ranges[k].min, a, b);
+    sl.hi.value = ranges[k].max == null ? r(b) : clamp(ranges[k].max, a, b);
+    paintSlider(k);
+  }
+}
+rangeClearBtn.addEventListener('click', () => {
+  for (const k of METRIC_KEYS) { ranges[k].min = null; ranges[k].max = null; }
+  updateRangeBounds();
+  rangeClearBtn.disabled = true;
+  onFilterChange();
+});
 
 const SORTERS = {
   year: (a, b) => a.year - b.year || a.name.localeCompare(b.name),
@@ -1800,8 +1965,10 @@ function renderCards() {
   if (store.loaded) countEl.innerHTML = `<b>${onGraph}</b> / ${data.shoes.size} 足をグラフに表示中`;
   else countEl.textContent = '';
   if (store.loaded && data.shoes.size && !list.length) {
-    emptyEl.textContent = ui.onlyStarred && !starred.size ? '注目のシューズがまだありません。「注目のみ」を外して、一覧の☆で選んでください。'
+    emptyEl.textContent = !activeBrands.size && data.brands.size ? 'メーカーを選ぶと、ここにシューズが並びます。'
+      : ui.onlyStarred && !starred.size ? '注目のシューズがまだありません。「注目のみ」を外して、一覧の☆で選んでください。'
       : ui.query.trim() ? `「${ui.query.trim()}」に当てはまるシューズがありません。`
+      : rangeActive() ? '条件に当てはまるシューズがありません。範囲の指定をゆるめてください。'
       : '表示できるカードがありません。ブランドの絞り込みか、年代の範囲を変えてください。';
     emptyEl.hidden = false;
   } else if (store.loaded && !data.shoes.size) {
@@ -1848,12 +2015,15 @@ const fontsReady = (async () => {
 })();
 function applyData() { fontsReady.then(applyDataNow); }
 function applyDataNow() {
-  for (const id of data.brands.keys()) if (!seenBrands.has(id)) { seenBrands.add(id); activeBrands.add(id); }
+  // 最初は何も選ばない（メーカーを選んでから表示）。あとから増えたブランドだけ自動で選ぶ
+  const firstLoad = !seenBrands.size;
+  for (const id of data.brands.keys()) if (!seenBrands.has(id)) { seenBrands.add(id); if (!firstLoad) activeBrands.add(id); }
   for (const id of [...activeBrands]) if (!data.brands.has(id)) activeBrands.delete(id);
   if (ui.selectedId && !data.shoes.has(ui.selectedId)) ui.selectedId = null;
   if (ui.listHoverId && !data.shoes.has(ui.listHoverId)) ui.listHoverId = null;
   if (ui.hoverId && !data.shoes.has(ui.hoverId)) ui.hoverId = null;
   syncEntries();
+  updateRangeBounds();
   renderFilters();
   renderCards();
   applySpriteStates();
@@ -1898,7 +2068,8 @@ function updateStageMessage() {
   } else if (store.loaded) {
     // 選んだ軸の値がそろっていないせいでグラフが空になっている場合だけ知らせる
     const list = [...data.shoes.values()].filter((x) => passesFilters(x) && !hiddenShoes.has(x.id));
-    if (ui.onlyStarred && !starred.size) msg = '注目のシューズがまだありません。一覧の☆で選ぶと、ここに表示されます。';
+    if (!activeBrands.size && data.brands.size) msg = 'メーカーを選ぶと、そのシューズが表示されます。';
+    else if (ui.onlyStarred && !starred.size) msg = '注目のシューズがまだありません。一覧の☆で選ぶと、ここに表示されます。';
     else if (list.length && !list.some(isShown)) {
       const keys = [ui.xKey, ui.yKey].filter((k) => list.every((x) => !hasValue(x, k)));
       if (keys.length) msg = `${keys.map((k) => METRICS[k].label).join('・')}のデータがまだ入っていないため、この軸の組み合わせでは表示できるシューズがありません。`;
@@ -1948,6 +2119,18 @@ function publishedData() {
   const d = window.SHOE_DATA;
   return d && Array.isArray(d.brands) && Array.isArray(d.shoes) ? d : null;
 }
+// images.js（tools/link_images.py で生成）にあるシューズは、images フォルダの画像を使う。
+// 編集モードの下書きで画像を自分で変えたシューズは、その画像のまま。
+function withLocalImages(src, pub) {
+  const map = window.SHOE_IMAGES;
+  if (!src || !map || typeof map !== 'object') return src;
+  const pubImage = new Map(((pub || src).shoes || []).map((x) => [x && x.id, x && x.image]));
+  return { ...src, shoes: src.shoes.map((x) => {
+    if (!x || typeof map[x.id] !== 'string' || !isSafePath(map[x.id])) return x;
+    if (x.image && x.image !== pubImage.get(x.id) && x.image !== map[x.id]) return x;
+    return { ...x, image: map[x.id], imagePath: map[x.id], imageData: null, imageAsset: null };
+  }) };
+}
 function readSource(src) {
   data.brands = new Map(); data.shoes = new Map();
   src.brands.forEach((b) => { const r = b && readBrand(b.id, b); if (r) data.brands.set(r.id, r); });
@@ -1995,7 +2178,7 @@ function startLocal() {
   }
   store.hasDraft = !!draft;
   store.missingData = !pub && !draft;
-  readSource(draft || pub || { brands: [], shoes: [] });
+  readSource(withLocalImages(draft || pub, pub) || { brands: [], shoes: [] });
   store.loaded = true;
   store.canWrite = editMode;
   store.canUpload = editMode;
@@ -2007,7 +2190,7 @@ function discardDraft() {
   store.hasDraft = false;
   const pub = publishedData();
   store.missingData = !pub;
-  readSource(pub || { brands: [], shoes: [] });
+  readSource(withLocalImages(pub, pub) || { brands: [], shoes: [] });
   updatePermissionsUI();
   applyData();
   toast('下書きを破棄して、data.js の内容に戻しました');

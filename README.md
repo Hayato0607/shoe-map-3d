@@ -1,86 +1,89 @@
 # ランニングシューズ 3Dマップ
 
-速さ・反発・年代の3軸でランニングシューズの立ち位置を比べる 3D マップです。
-ビルド不要の静的サイトなので、GitHub Pages にそのまま置けます。
+速さ・反発・重さ・価格から2つの軸を選び、年代を奥行きにして、ランニングシューズの立ち位置を比べる 3D マップです。
+ビルド不要の静的サイトなので、GitHub Pages にそのまま置けます。画面の使い方は、左上の「操作方法」ボタンから確認できます。
 
 ```
 shoe-map-3d/
-├── index.html   アプリ本体（three.js は CDN から読み込み）
-├── data.js      ブランドとシューズのデータ
-└── images/      シューズ画像を置くフォルダ
+├── index.html               アプリ本体（three.js は CDN から読み込み）
+├── data.js                  ブランドとシューズのデータ（tools/csv_to_datajs.py で自動生成）
+├── images.js                画像の対応表（tools/link_images.py で自動生成）
+├── tools/csv_to_datajs.py   シューズDBの CSV から data.js を作るスクリプト
+├── tools/link_images.py     images フォルダの画像とシューズを結びつけるスクリプト
+├── tools/shrink_images.py    元画像をサイト用に縮小するスクリプト
+├── images_original/         元画像（GitHub には上げない）
+└── images/                  サイト用に縮小した画像
 ```
+
+## データを更新する（シューズDBの CSV から）
+
+1. シューズDBから CSV を書き出し、このフォルダに置く（`.gitignore` で CSV はコミットされません）
+2. 次を実行する（Python 3.8 以降。追加インストールは不要）
+
+   ```powershell
+   python tools/csv_to_datajs.py shoe-database_models_all_YYYYMMDD.csv
+   ```
+
+3. `data.js` が上書きされるので、コミットしてプッシュする
+
+   ```powershell
+   git add data.js
+   git commit -m "Update shoe data"
+   git push
+   ```
+
+初期設定では、カテゴリが「ランニングシューズ」で、モデル公開が「公開」のものだけを書き出します。
+スパイクも含める場合は `--include-spikes` を付けてください。`--include-private`（非公開モデルを含める）は、公開サイトには使わないでください。
+
+計算の内訳は CSV と同じフォルダに `score_report_YYYYMMDD.csv` として出ます（Excel で開けます）。
+
+### 速さ・反発の計算ルール
+
+詳しい数値は `tools/csv_to_datajs.py` の冒頭にまとめてあります。ルールを変えるときも、スクリプト冒頭の数値を書き換えるだけです。
+
+- **反発**：反発性と評価_安定性から算出（反発性が高いほど＋、安定性が高いほど−）。反発性は、反発指標（実測）がリア・ミッド・フォアの3か所そろっていればそれを10段階に換算した値、なければ評価_反発性を使います。実測値から出したシューズは、グラフ上の詳細に「反発は実測値から算出」と表示されます
+- **速さ**：「用途→対象レベル」の組み合わせごとに想定ペースを出した平均速度（7割）と、重量（3割）から算出
+- 用途→対象レベルが入っていないシューズは、速さを空欄にします（その軸ではグラフに出ません）
+
+## シューズ画像を入れる
+
+元画像は `images_original/` に置き、サイト用に縮小したものを `images/` に書き出します（元画像は GitHub に上げません）。
+
+1. 元画像を `images_original/` フォルダに置く。ファイル名は `番号_ブランド_シューズ名.png` の形にする
+   （例：`012_asics_メタスピード エッジ トウキョウ.png`。末尾の `_要確認` は無視されます）
+2. 次を実行する（`pip install pillow` は最初の1回だけ）
+
+   ```powershell
+   pip install pillow
+   python tools/shrink_images.py
+   python tools/link_images.py
+   ```
+
+3. `images/` と `images.js` をコミットしてプッシュする
+
+結びつけのルール：ブランドが一致するシューズのうち、名前がファイル名に含まれているものに画像を割り当てます。
+複数あてはまるときは名前がいちばん長いものを選び、名前のすぐ後ろに数字が続く場合（「ハイペリオン 2」と「ハイペリオン」など）は別モデルとして扱います。
+1足に複数の画像が当たったときは、名前がぴったり同じもの → `_要確認` なし → 番号が小さいもの、の順で選びます。
+結果は `image_link_report.csv` に出ます。「部分一致」の行は、正しい画像か目で確認してください。
+
+images.js にあるシューズは、data.js の画像より images フォルダの画像を優先して表示します。
+`csv_to_datajs.py` で data.js を作り直したあとも、`link_images.py` をもう一度実行してください。
 
 ## 手元で開く
 
-画像を 3D 上に表示するには、ローカルサーバー経由で開いてください
-（`index.html` をダブルクリックで開くと、ブラウザの制限で画像だけ仮のイラストになります）。
+画像を 3D 上に表示するには、ローカルサーバー経由で開いてください。
 
 ```powershell
-cd shoe-map-3d
-npx serve .            # Node.js がある場合 → 表示された http://localhost:3000 を開く
-# または
-python -m http.server 8000   # → http://localhost:8000
+npx serve .            # または python -m http.server 8000
 ```
 
-## GitHub Pages で公開する
+## 画面上での編集（編集モード）
 
-1. GitHub で新しいリポジトリを作る（例：`shoe-map-3d`）
-2. このフォルダをプッシュする
-
-   ```powershell
-   cd shoe-map-3d
-   git init
-   git add .
-   git commit -m "Add running shoe 3D map"
-   git branch -M main
-   git remote add origin https://github.com/<ユーザー名>/shoe-map-3d.git
-   git push -u origin main
-   ```
-
-3. リポジトリの **Settings → Pages** を開き、**Source** を「Deploy from a branch」、
-   **Branch** を `main` / `/(root)` にして **Save**
-4. 1〜2分後に `https://<ユーザー名>.github.io/shoe-map-3d/` で公開される
-
-以降は `data.js` や `images/` を更新してプッシュするたびに、自動で公開ページに反映されます。
-
-## データを更新する
-
-### A. ブラウザの編集モードで更新する
-
-1. 公開ページ（または手元のローカルサーバー）の URL の末尾に `?edit` を付けて開く
-   例：`https://<ユーザー名>.github.io/shoe-map-3d/?edit`
-2. 「カードを追加」「ブランドを管理」「編集」で内容を変える
-   （変更はそのブラウザに下書きとして保存されるだけで、まだ公開ページには出ません）
-3. 右下の「data.js を書き出す」→「data.js をダウンロード」
-4. リポジトリの `data.js` をダウンロードしたファイルで置き換えて、コミット・プッシュ
-5. 反映を確認したら、編集モードの「下書きを破棄」で下書きを消す
-
-`?edit` を付けない URL は閲覧専用です。編集ボタンは表示されません。
-
-### B. data.js を直接編集する
-
-```js
-{
-  "id": "s20",            // 重複しない ID
-  "brandId": "b-asics",   // brands の id
-  "name": "METASPEED Edge",
-  "year": 2024,           // 発売年
-  "speed": 4.3,           // -5（遅い）〜 +5（速い）
-  "rebound": 3.5,         // -5（低反発・安定）〜 +5（高反発）
-  "image": "images/metaspeed-edge.webp",
-  "note": "メモ（グラフ上の詳細に表示）"
-}
-```
-
-新しいブランドは `brands` に `{ "id": "b-on", "name": "On", "color": "#0e7490" }` のように追加します。
-
-## 画像について
-
-- `images/` に置いて、`data.js` の `image` にパスを書くのがおすすめです（背景を切り抜いた透過 PNG / WebP がきれいに見えます）
-- 編集モードで「画像を選ぶ」から入れた画像は、`data.js` の中に埋め込まれます。手軽ですが、枚数が多いと `data.js` が重くなります
+URL の末尾に `?edit` を付けると、カードの追加・編集、ブランドの管理ができます。
+変更はそのブラウザに下書きとして保存されるので、「data.js を書き出す」でダウンロードし、リポジトリの `data.js` と置き換えてプッシュしてください。
+CSV から作り直すと、編集モードでの変更は上書きされる点に注意してください。
 
 ## 注意
 
-- GitHub Pages のサイトは、URL を知っていれば誰でも見られる公開ページになります。
-  メーカーの製品画像を使う場合は、各社の利用条件を確認してください。
-- 軸の範囲（年代の 1970〜2030 など）は `index.html` 内の `CONFIG` で変えられます。
+- GitHub Pages のサイトは、URL を知っていれば誰でも見られる公開ページです。
+- 初期表示の年代の範囲（2015〜2030年）や、重さ・価格の範囲は `index.html` 内の `CONFIG` で変えられます。
