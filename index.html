@@ -419,8 +419,16 @@ dialog { border: 1px solid var(--accent-line); }
 @media (max-width: 860px) {
   html, body { height: auto; }
   .app { grid-template-columns: 1fr; height: auto; }
-  .app { gap: 10px; padding: 10px; }
-  .stage-wrap { height: 68vh; height: 68svh; min-height: 400px; }
+  /* スマホでは 3D マップを画面の上に固定し、その下の一覧だけがスクロールする */
+  html { --stage-h: 46vh; --stage-h: 46svh; scroll-padding-top: calc(var(--stage-h) + 12px); }
+  .app { gap: 10px; padding: 0 10px 10px; }
+  .stage-wrap {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    height: var(--stage-h); min-height: 300px;
+    border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0;
+    box-shadow: 0 10px 18px -6px rgba(0, 0, 0, 0.75);
+  }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }
   .topbar { left: 14px; top: 12px; right: 14px; }
   .topbar h1 { font-size: 16px; }
   .caption { font-size: 12.5px; }
@@ -1920,7 +1928,6 @@ function cardEl(s) {
 
   main.addEventListener('click', () => {
     select(s.id, { toggle: true });
-    if (!desktopMQ.matches && ui.selectedId) stageWrap.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   });
   const hot = (on) => { ui.listHoverId = on ? s.id : (ui.listHoverId === s.id ? null : ui.listHoverId); applySpriteStates(); };
   main.addEventListener('mouseenter', () => hot(true));
